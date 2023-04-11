@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any
+
 from uaf.enums.mobile_os import MobileOs
-from uaf.enums.test_execution_mode import TestExecutionMode
 from uaf.enums.test_environments import TestEnvironments
+from uaf.enums.test_execution_mode import TestExecutionMode
 
 
 class AbstractMobile(ABC):

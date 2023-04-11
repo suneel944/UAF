@@ -1,11 +1,12 @@
 from typing import Optional
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_ie import (
-    AbstractIE,
-)
-from . import webdriver
+
+from selenium.webdriver.ie.options import Options as IeOptions
 from selenium.webdriver.ie.service import Service
 from webdriver_manager.microsoft import IEDriverManager
-from selenium.webdriver.ie.options import Options as IeOptions
+
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_ie import AbstractIE
+
+from . import webdriver
 
 
 class ConcreteIEDriver(AbstractIE):

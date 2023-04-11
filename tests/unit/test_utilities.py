@@ -1,9 +1,9 @@
 import pytest
+
 from uaf.decorators.pytest.pytest_ordering import order
+from uaf.enums.file_paths import FilePaths
 from uaf.utilities.database.mongo_utils import MongoUtility
 from uaf.utilities.parser.yaml_parser_utils import YamlParser
-from uaf.enums.file_paths import FilePaths
-
 
 config = YamlParser(FilePaths.COMMON)
 connection_string = config.get_value("mongodb", "connection_string")
@@ -40,6 +40,4 @@ def test_mongo_db_duplicate_database_creation():
         rand_choice = random.choice(db_list)
         with pytest.raises(ValueError) as exc_info:
             mongo_client.create_database(rand_choice)
-        assert str(exc_info.value).__contains__(
-            f"Database '{rand_choice}' already exists!"
-        )
+        assert str(exc_info.value).__contains__(f"Database '{rand_choice}' already exists!")

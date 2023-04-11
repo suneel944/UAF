@@ -1,6 +1,7 @@
-from typing import List, Any, Optional
+from typing import Any, List, Optional
+
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure, CollectionInvalid, OperationFailure
+from pymongo.errors import CollectionInvalid, ConnectionFailure, OperationFailure
 
 
 class MongoUtility:
@@ -50,9 +51,7 @@ class MongoUtility:
         """
         if self._database is not None:
             return self._database.name
-        raise ValueError(
-            "current database is not set! or client connection is not made"
-        )
+        raise ValueError("current database is not set! or client connection is not made")
 
     @property
     def uuid_representation(self):
@@ -69,9 +68,7 @@ class MongoUtility:
         """
         if self.collections is not None:
             return self.collections
-        raise ValueError(
-            "current collection is not set! or client connection is not made"
-        )
+        raise ValueError("current collection is not set! or client connection is not made")
 
     def create_database(self, database_name: str, **kwargs: Any):
         try:
@@ -159,9 +156,7 @@ class MongoUtility:
         except OperationFailure as e:
             raise ValueError(f"Failed to insert document: {e}")
 
-    def insert_many(
-        self, collection_name: str, documents: List[dict[str, Any]], **kwargs: Any
-    ):
+    def insert_many(self, collection_name: str, documents: List[dict[str, Any]], **kwargs: Any):
         try:
             collection = self.get_collection(collection_name)
             return collection.insert_many(documents, **kwargs)
@@ -188,9 +183,7 @@ class MongoUtility:
         **kwargs: Any,
     ):
         try:
-            self.get_collection(collection_name).find_one_and_replace(
-                filter, replacement, kwargs
-            )
+            self.get_collection(collection_name).find_one_and_replace(filter, replacement, kwargs)
         except OperationFailure as e:
             raise ValueError(f"Failed to find and replace document: {e}")
 

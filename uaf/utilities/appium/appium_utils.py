@@ -1,10 +1,4 @@
-from . import (
-    Optional,
-    FakerUtils,
-    FilePaths,
-    MobileDeviceEnvironmentType,
-    YamlParser,
-)
+from . import FakerUtils, FilePaths, MobileDeviceEnvironmentType, Optional, YamlParser
 
 
 class AppiumUtils:
@@ -71,16 +65,13 @@ class AppiumUtils:
                 except OSError:
                     elapsed_time = time.time() - start_time
                     if elapsed_time >= max_wait_time:
-                        raise TimeoutError(
-                            "Timed out waiting for Appium server to start"
-                        )
+                        raise TimeoutError("Timed out waiting for Appium server to start")
                     else:
                         time.sleep(1)
 
     @staticmethod
     def purge_appium_node(port: int):
-        from psutil import process_iter
-        from psutil import NoSuchProcess, AccessDenied, ZombieProcess
+        from psutil import AccessDenied, NoSuchProcess, ZombieProcess, process_iter
 
         for proc in process_iter():
             try:
@@ -111,14 +102,10 @@ class AppiumUtils:
 
     @staticmethod
     def purge_ios_simulator(simulator_name: str):
-        AppiumUtils.execute_commands(
-            ["xcrun", "simctl", "delete", "{}".format(simulator_name)]
-        )
+        AppiumUtils.execute_commands(["xcrun", "simctl", "delete", "{}".format(simulator_name)])
 
     @staticmethod
-    def create_android_emulator(
-        emulator_name: Optional[str] = None, package: Optional[str] = None
-    ):
+    def create_android_emulator(emulator_name: Optional[str] = None, package: Optional[str] = None):
         """
         Creates an android emulator with user required name and system image a.k.a package\n
 
@@ -159,9 +146,7 @@ class AppiumUtils:
 
     @staticmethod
     def purge_android_emulator(emulator_name: str):
-        AppiumUtils.execute_commands(
-            ["avdmanager", "delete", "avd", "-n", "{}".format(emulator_name)]
-        )
+        AppiumUtils.execute_commands(["avdmanager", "delete", "avd", "-n", "{}".format(emulator_name)])
 
     @staticmethod
     def fetch_connected_android_devices_ids(
@@ -171,16 +156,12 @@ class AppiumUtils:
     ):
         cmd_output = AppiumUtils.execute_commands(["adb", "devices"])
         device_ids: list[str] = [
-            line.split()[0]
-            for line in cmd_output.splitlines()[1:]
-            if line and not line.startswith("*")
+            line.split()[0] for line in cmd_output.splitlines()[1:] if line and not line.startswith("*")
         ]
         match mobile_device_environment.value:
             case MobileDeviceEnvironmentType.PHYSICAL.value:
                 if device_ids.__len__() == 0:
-                    raise RuntimeError(
-                        "No physical device(s) connected/available at the moment!"
-                    )
+                    raise RuntimeError("No physical device(s) connected/available at the moment!")
                 return list(filter(lambda x: "emulator" not in x, device_ids))
             case MobileDeviceEnvironmentType.EMULATOR.value:
                 if device_ids.__len__() == 0:
@@ -199,8 +180,6 @@ class AppiumUtils:
                 return list(cmd_output.strip().split("\n"))
             case MobileDeviceEnvironmentType.SIMULATOR.value:
                 cmd_output = AppiumUtils.execute_commands(["xcrun", "simctl", "list"])
-                return [
-                    line.split("(")[1].split(")")[0] for line in cmd_output.split("\n")
-                ]
+                return [line.split("(")[1].split(")")[0] for line in cmd_output.split("\n")]
             case _:
                 raise TypeError("Supports only physical and simulator type!!")

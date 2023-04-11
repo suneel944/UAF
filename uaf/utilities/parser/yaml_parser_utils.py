@@ -1,5 +1,7 @@
-import yaml
 import os
+
+import yaml  # type: ignore
+
 from uaf.enums.file_paths import FilePaths
 
 
@@ -13,19 +15,13 @@ class YamlParser:
         if section in self.config:
             return self.config[section]
         else:
-            raise ValueError(
-                "Selected {} section is invalid/doesn't exist!".format(section)
-            )
+            raise ValueError("Selected {} section is invalid/doesn't exist!".format(section))
 
     def get_value(self, section, key):
         if section in self.config and key in self.config[section]:
             return self.config[section][key]
         else:
-            raise ValueError(
-                "Selected {}-{} section-key pair is invalid/doesn't exist!".format(
-                    section, key
-                )
-            )
+            raise ValueError("Selected {}-{} section-key pair is invalid/doesn't exist!".format(section, key))
 
     def set_value(self, section, key, value):
         if section not in self.config:

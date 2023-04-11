@@ -1,7 +1,6 @@
 from typing import Any
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_android import (
-    AbstractAndroid,
-)
+
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_android import AbstractAndroid
 
 
 class ConcreteAndroidDriver(AbstractAndroid):
@@ -19,8 +18,8 @@ class ConcreteAndroidDriver(AbstractAndroid):
         Returns:
             WebDriver: Android driver instance
         """
-        from appium.webdriver import Remote
         from appium.options.android import UiAutomator2Options
+        from appium.webdriver import Remote
 
         # launch android driver
         return Remote(

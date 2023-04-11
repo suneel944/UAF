@@ -1,4 +1,5 @@
 from pytest import mark
+
 from uaf.enums.browser_make import WebBrowserMake
 from uaf.enums.file_paths import FilePaths
 from uaf.enums.mobile_os import MobileOs
@@ -53,8 +54,6 @@ def test_test_environment_enum(arg_test_env_enum: TestEnvironments):
     assert isinstance(arg_test_env_enum.value, str)
 
 
-@mark.parametrize(
-    "arg_test_exec_mode", [TestExecutionMode.LOCAL, TestExecutionMode.REMOTE]
-)
+@mark.parametrize("arg_test_exec_mode", [TestExecutionMode.LOCAL, TestExecutionMode.REMOTE])
 def test_test_execution_mode_enum(arg_test_exec_mode: TestExecutionMode):
     assert isinstance(arg_test_exec_mode.value, str)

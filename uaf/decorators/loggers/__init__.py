@@ -1,5 +1,6 @@
-import sys
 import os
+import sys
+
 from loguru import logger as _logger
 
 __all__ = ["_logger"]
@@ -53,9 +54,7 @@ for level, color in logging_levels.items():
 
 
 def exception_hook(exception_type, value, traceback):
-    _logger.opt(depth=1).critical(
-        "Unhandled exception occurred", exception=(exception_type, value, traceback)
-    )
+    _logger.opt(depth=1).critical("Unhandled exception occurred", exception=(exception_type, value, traceback))
 
 
 # Add the custom exception hook

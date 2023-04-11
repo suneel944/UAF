@@ -1,27 +1,24 @@
-from pytest import fixture, FixtureRequest
-from uaf.enums.mobile_os import MobileOs
-from uaf.enums.mobile_app_type import MobileAppType
-from uaf.enums.test_execution_mode import TestExecutionMode
-from uaf.enums.appium_automation_name import AppiumAutomationName
-from uaf.enums.test_environments import TestEnvironments
-from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
-from uaf.enums.browser_make import WebBrowserMake, MobileWebBrowserMake
-from uaf.utilities.appium.appium_utils import AppiumUtils
-from uaf.factories.driver.concrete_factory.concrete_factory import (
-    ConcreteWebDriverFactory,
-    ConcreteMobileDriverFactory,
-)
-from uaf.enums.driver_executable_paths import DriverExecutablePaths
-from tests.test_data.appium.capabilities import Capabilities
 from typing import Optional
-from uaf.device_farming.device_tasks import reserve_device, release_device
+
+from pytest import FixtureRequest, fixture
+
+from tests.test_data.appium.capabilities import Capabilities
 from uaf.decorators.loggers.logger import log
+from uaf.device_farming.device_tasks import release_device, reserve_device
+from uaf.enums.appium_automation_name import AppiumAutomationName
+from uaf.enums.browser_make import MobileWebBrowserMake, WebBrowserMake
+from uaf.enums.driver_executable_paths import DriverExecutablePaths
+from uaf.enums.mobile_app_type import MobileAppType
+from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
+from uaf.enums.mobile_os import MobileOs
+from uaf.enums.test_environments import TestEnvironments
+from uaf.enums.test_execution_mode import TestExecutionMode
+from uaf.factories.driver.concrete_factory.concrete_factory import ConcreteMobileDriverFactory, ConcreteWebDriverFactory
+from uaf.utilities.appium.appium_utils import AppiumUtils
 
 
 @log
-def __fetch_required_arg_list(
-    arg_mobile_app_type: MobileAppType, arg_mobile_os: MobileOs
-):
+def __fetch_required_arg_list(arg_mobile_app_type: MobileAppType, arg_mobile_os: MobileOs):
     match arg_mobile_app_type.value:
         case MobileAppType.HYBRID.value:
             required_list = [
@@ -61,20 +58,14 @@ def __fetch_required_arg_list(
 
 
 @log
-def __check_required_keys_values_exist(
-    arg_data: FixtureRequest, arg_required_key_list: list[str]
-):
+def __check_required_keys_values_exist(arg_data: FixtureRequest, arg_required_key_list: list[str]):
     # key check
     if not all(key in arg_data.param for key in arg_required_key_list):
-        raise ValueError(
-            "Missing required arguments!! - {}".format(arg_required_key_list)
-        )
+        raise ValueError("Missing required arguments!! - {}".format(arg_required_key_list))
     # value check
     value_list = [arg_data.param.get(i) for i in arg_required_key_list]
     if None in value_list:
-        raise ValueError(
-            "Require argument cannot be none type!! - {}".format(arg_required_key_list)
-        )
+        raise ValueError("Require argument cannot be none type!! - {}".format(arg_required_key_list))
 
 
 @log
@@ -135,9 +126,7 @@ def __build_mobile_capabilities(
 def mobile_driver(request: FixtureRequest):
     __check_required_keys_values_exist(
         request,
-        __fetch_required_arg_list(
-            request.param.get("arg_mobile_app_type"), request.param.get("arg_mobile_os")
-        ),
+        __fetch_required_arg_list(request.param.get("arg_mobile_app_type"), request.param.get("arg_mobile_os")),
     )
     capabilities, device_id, session_id = __build_mobile_capabilities(
         request.param.get("arg_mobile_os"),

@@ -1,11 +1,13 @@
 from typing import Tuple
+
 from webdriver_manager.core.manager import DriverManager
-from . import Enum
+
 from . import (
     ChromeDriverManager,
+    EdgeChromiumDriverManager,
+    Enum,
     GeckoDriverManager,
     IEDriverManager,
-    EdgeChromiumDriverManager,
     OperaDriverManager,
 )
 

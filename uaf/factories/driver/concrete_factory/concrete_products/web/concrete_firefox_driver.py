@@ -1,11 +1,12 @@
 from typing import Optional
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_firefox import (
-    AbstractFirefox,
-)
+
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from . import webdriver
-from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
+
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_firefox import AbstractFirefox
+
+from . import webdriver
 
 
 class ConcreteFirefoxDriver(AbstractFirefox):

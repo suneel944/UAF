@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
 from selenium.webdriver.edge.options import Options as MsEdgeOptions
 
 

@@ -1,10 +1,11 @@
 from pytest import mark
+
 from tests.fixtures.conftest import mobile_driver
-from uaf.enums.mobile_os import MobileOs
+from uaf.enums.appium_automation_name import AppiumAutomationName
+from uaf.enums.browser_make import MobileWebBrowserMake
 from uaf.enums.mobile_app_type import MobileAppType
 from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
-from uaf.enums.browser_make import MobileWebBrowserMake
-from uaf.enums.appium_automation_name import AppiumAutomationName
+from uaf.enums.mobile_os import MobileOs
 
 
 @mark.parametrize(

@@ -1,11 +1,12 @@
 from typing import Optional
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_chrome import (
-    AbstractChrome,
-)
+
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from . import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_chrome import AbstractChrome
+
+from . import webdriver
 
 
 class ConcreteChromeDriver(AbstractChrome):

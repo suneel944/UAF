@@ -1,4 +1,4 @@
-from . import Faker, random, Optional, Any
+from . import Any, Faker, Optional, random
 
 
 class FakerUtils:

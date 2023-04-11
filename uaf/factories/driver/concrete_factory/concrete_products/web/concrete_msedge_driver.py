@@ -1,11 +1,12 @@
 from typing import Optional
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_msedge import (
-    AbstractMsedge,
-)
+
 from selenium.webdriver.edge.options import Options as MsEdgeOptions
-from . import webdriver
 from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_msedge import AbstractMsedge
+
+from . import webdriver
 
 
 class ConcreteMsedgeDriver(AbstractMsedge):

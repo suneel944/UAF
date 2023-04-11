@@ -1,9 +1,10 @@
 from abc import ABCMeta, abstractmethod
 from typing import Any, Optional
+
 from uaf.enums.browser_make import WebBrowserMake
 from uaf.enums.mobile_os import MobileOs
-from uaf.enums.test_execution_mode import TestExecutionMode
 from uaf.enums.test_environments import TestEnvironments
+from uaf.enums.test_execution_mode import TestExecutionMode
 
 
 class AbstractWebDriverFactory(metaclass=ABCMeta):

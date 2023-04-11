@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
 from selenium.webdriver.ie.options import Options as IeOptions
 
 

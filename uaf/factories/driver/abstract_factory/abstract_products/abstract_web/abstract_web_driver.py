@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Any
+from typing import Any, Optional
+
 from uaf.enums.browser_make import WebBrowserMake
 
 

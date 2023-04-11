@@ -1,16 +1,16 @@
 import time
-import psutil
+from functools import wraps
 from traceback import format_exc
 from typing import Any, Callable, Optional, TypeVar
-from functools import wraps
+
+import psutil
+
 from . import _logger as logger
 
 T = TypeVar("T", bound=Callable[..., Any])
 
 
-def log(
-    func: Optional[T] = None, *, log_return_value: bool = True
-) -> Callable[[Any], Any]:
+def log(func: Optional[T] = None, *, log_return_value: bool = True) -> Callable[[Any], Any]:
     """
     Logs info and errors for any decorated function
     """
@@ -82,15 +82,11 @@ def log_performance(condition=None):
                 if condition and condition(func, result):
                     cpu_percent = cpu_after - cpu_before
                     mem_usage = mem_after - mem_before
-                    logger.info(
-                        f"Function {func.__name__} took {execution_time:.2f} seconds to execute"
-                    )
+                    logger.info(f"Function {func.__name__} took {execution_time:.2f} seconds to execute")
                     logger.info(f"CPU usage: {cpu_percent:.2f}%")
                     logger.info(f"Memory usage: {mem_usage:.2f} MB")
                 else:
-                    logger.info(
-                        f"Function {func.__name__} took {execution_time:.2f} seconds to execute"
-                    )
+                    logger.info(f"Function {func.__name__} took {execution_time:.2f} seconds to execute")
                 return result
 
         return wrapper

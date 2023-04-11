@@ -1,14 +1,17 @@
-from random import choice
-from uuid import uuid4, UUID
 from datetime import datetime
+from random import choice
+from uuid import UUID, uuid4
+
 from celery.schedules import crontab
-from . import get_celery_app, YamlParser, FilePaths
+
 from uaf.decorators.loggers.logger import log
-from uaf.utilities.database.mongo_utils import MongoUtility
 from uaf.enums.device_status import DeviceStatus
-from uaf.utilities.appium.appium_utils import AppiumUtils
 from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
 from uaf.enums.mobile_os import MobileOs
+from uaf.utilities.appium.appium_utils import AppiumUtils
+from uaf.utilities.database.mongo_utils import MongoUtility
+
+from . import FilePaths, YamlParser, get_celery_app
 
 app = get_celery_app()
 config = YamlParser(FilePaths.COMMON)
@@ -28,22 +31,16 @@ def add_new_devices_to_list():
     """
     all_devices = [
         __device_list["device_id"]
-        for __device_list in mongo_client.find_many(
-            config.get_value("mongodb", "device_stat_collection")
-        )
+        for __device_list in mongo_client.find_many(config.get_value("mongodb", "device_stat_collection"))
     ]
     from platform import system
 
     if system().lower().__eq__("darwin"):
-        connected_ios_physical_devices_list = (
-            AppiumUtils.fetch_connected_ios_devices_ids(
-                MobileDeviceEnvironmentType.PHYSICAL
-            )
+        connected_ios_physical_devices_list = AppiumUtils.fetch_connected_ios_devices_ids(
+            MobileDeviceEnvironmentType.PHYSICAL
         )
         unique_ios_physical_devices_list = [
-            device
-            for device in connected_ios_physical_devices_list
-            if device not in all_devices
+            device for device in connected_ios_physical_devices_list if device not in all_devices
         ]
         if unique_ios_physical_devices_list:
             mongo_client.insert_many(
@@ -58,15 +55,11 @@ def add_new_devices_to_list():
                     for x in unique_ios_physical_devices_list
                 ],
             )
-    connected_android_physical_devices_list = (
-        AppiumUtils.fetch_connected_android_devices_ids(
-            MobileDeviceEnvironmentType.PHYSICAL
-        )
+    connected_android_physical_devices_list = AppiumUtils.fetch_connected_android_devices_ids(
+        MobileDeviceEnvironmentType.PHYSICAL
     )
     unique_android_physical_devices_list = [
-        device
-        for device in connected_android_physical_devices_list
-        if device not in all_devices
+        device for device in connected_android_physical_devices_list if device not in all_devices
     ]
     if unique_android_physical_devices_list:
         mongo_client.insert_many(
@@ -94,18 +87,10 @@ def reserve_device(mobile_os: str):
         {"status": DeviceStatus.AVAILABLE.value},
     )
     if not available_devices:
-        raise ValueError(
-            f"Failed to start any device for {mobile_os} mobile os as availability is 0!!"
-        )
+        raise ValueError(f"Failed to start any device for {mobile_os} mobile os as availability is 0!!")
 
     # randomly choose device_id based on the mobile os
-    device_id = choice(
-        [
-            device["device_id"]
-            for device in available_devices
-            if mobile_os.__eq__(device["device_os"])
-        ]
-    )
+    device_id = choice([device["device_id"] for device in available_devices if mobile_os.__eq__(device["device_os"])])
     uuid: UUID = __get_unique_id()
     session_doc = {
         "device_id": device_id,
@@ -120,9 +105,7 @@ def reserve_device(mobile_os: str):
         {"device_id": device_id},
         device_stats_doc,
     )
-    mongo_client.insert_one(
-        config.get_value("mongodb", "device_session_collection"), session_doc
-    )
+    mongo_client.insert_one(config.get_value("mongodb", "device_session_collection"), session_doc)
     return device_id, uuid
 
 

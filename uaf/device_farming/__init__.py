@@ -1,4 +1,5 @@
 from celery import Celery
+
 from uaf.enums.file_paths import FilePaths
 from uaf.utilities.parser.yaml_parser_utils import YamlParser
 

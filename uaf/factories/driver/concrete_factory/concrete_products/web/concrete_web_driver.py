@@ -1,26 +1,13 @@
-from typing import Optional, Any
+from typing import Any, Optional
+
 from uaf.enums.browser_make import WebBrowserMake
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_web_driver import (
-    AbstractWebDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_brave_driver import (
-    ConcreteBraveDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_chrome_driver import (
-    ConcreteChromeDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_firefox_driver import (
-    ConcreteFirefoxDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_ie_driver import (
-    ConcreteIEDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_msedge_driver import (
-    ConcreteMsedgeDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_chromium_driver import (
-    ConcreteChromiumDriver,
-)
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_web_driver import AbstractWebDriver
+from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_brave_driver import ConcreteBraveDriver
+from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_chrome_driver import ConcreteChromeDriver
+from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_chromium_driver import ConcreteChromiumDriver
+from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_firefox_driver import ConcreteFirefoxDriver
+from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_ie_driver import ConcreteIEDriver
+from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_msedge_driver import ConcreteMsedgeDriver
 
 
 class ConcreteWebDriver(AbstractWebDriver):

@@ -1,19 +1,14 @@
 from typing import Any
-from uaf.utilities.appium.appium_utils import AppiumUtils
-from uaf.utilities.parser.yaml_parser_utils import YamlParser
+
+from uaf.enums.file_paths import FilePaths
+from uaf.enums.mobile_os import MobileOs
 from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
-from uaf.enums.mobile_os import MobileOs
-from uaf.enums.file_paths import FilePaths
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_mobile import (
-    AbstractMobile,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_android_driver import (
-    ConcreteAndroidDriver,
-)
-from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_ios_driver import (
-    ConcreteIOSDriver,
-)
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_mobile import AbstractMobile
+from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_android_driver import ConcreteAndroidDriver
+from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_ios_driver import ConcreteIOSDriver
+from uaf.utilities.appium.appium_utils import AppiumUtils
+from uaf.utilities.parser.yaml_parser_utils import YamlParser
 
 
 class ConcreteMobileDriver(AbstractMobile):

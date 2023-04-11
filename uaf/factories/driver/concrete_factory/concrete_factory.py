@@ -1,13 +1,13 @@
 from . import (
-    abstract_factory,
-    Optional,
     Any,
-    WebBrowserMake,
-    MobileOs,
-    TestExecutionMode,
-    TestEnvironments,
     ConcreteMobileDriver,
     ConcreteWebDriver,
+    MobileOs,
+    Optional,
+    TestEnvironments,
+    TestExecutionMode,
+    WebBrowserMake,
+    abstract_factory,
 )
 
 
@@ -57,6 +57,4 @@ class ConcreteWebDriverFactory(abstract_factory.AbstractWebDriverFactory):
         Returns:
             WebDriver: browser driver instance based on user choice of browser make
         """
-        return ConcreteWebDriver(browser_make=browser_make).get_web_driver(
-            options=options
-        )
+        return ConcreteWebDriver(browser_make=browser_make).get_web_driver(options=options)

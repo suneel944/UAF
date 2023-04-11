@@ -1,5 +1,6 @@
-from faker import Faker
 import random
-from typing import Optional, Any
+from typing import Any, Optional
+
+from faker import Faker
 
 __all__ = ["Faker", "random", "Optional", "Any"]
