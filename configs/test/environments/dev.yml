@@ -1,0 +1,6 @@
+info:
+  name: Development
+  description: Holds specific information pertaining to development test environment
+
+urls:
+  google: https://www.google.co.in

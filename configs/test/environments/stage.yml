@@ -1,0 +1,6 @@
+info:
+  name: Stage
+  description: Holds specific information pertaining to stage test environment
+
+urls:
+  google: https://www.google.co.in

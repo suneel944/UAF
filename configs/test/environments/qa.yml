@@ -1,0 +1,6 @@
+info:
+  name: QA
+  description: Holds specific information pertaining to qa test environment
+
+urls:
+  google: https://www.google.co.in

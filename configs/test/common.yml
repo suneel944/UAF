@@ -1,0 +1,19 @@
+info:
+  name: Common
+
+ports:
+  appipum_service_min_port_band: 4723
+  appium_service_max_port_band: 4920
+
+appium:
+  appium_base_url_local: http://localhost:${port}/wd/hub
+  appium_base_url_remote: http://localhost:${port}/wd/hub
+
+celery:
+  broker_url: amqp://admin:admin123@localhost:5672
+  result_backend: rpc://admin:admin123@localhost:5672
+
+mongodb:
+  connection_string: mongodb://admin:admin123@localhost:27018/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
+  device_stat_collection: device_stats
+  device_session_collection: device_sessions
