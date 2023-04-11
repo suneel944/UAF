@@ -25,13 +25,15 @@ install-package:
 # Clean up
 clean:
 	pipenv --rm
-	rm -rf __pycache__
 	rm -rf .pytest_cache
 	rm -rf .tox
 	rm -rf dist
 	rm -rf build
 	rm -rf .mypy_cache
 	rm -rf *.egg-info
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type f -name "*.pyc" -delete
+	find . -type f -name "*.pyo" -delete
 
 # Install pre-commit hooks
 pre-commit-install:
