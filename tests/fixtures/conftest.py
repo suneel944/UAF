@@ -124,6 +124,14 @@ def __build_mobile_capabilities(
 @log
 @fixture(scope="function")
 def mobile_driver(request: FixtureRequest):
+    """Mobile driver fixture, responsible for yielding user requested mobile driver instance and clean up activity
+
+    Args:
+        request (FixtureRequest): test arguments
+
+    Yields:
+        AppiumDriver : returns user requested mobile driver instance
+    """
     __check_required_keys_values_exist(
         request,
         __fetch_required_arg_list(request.param.get("arg_mobile_app_type"), request.param.get("arg_mobile_os")),
@@ -152,6 +160,14 @@ def mobile_driver(request: FixtureRequest):
 
 @fixture(scope="function")
 def web_driver(request: FixtureRequest):
+    """WebDriver fixture, responsible for yielding user requested web driver instance and clean up activity
+
+    Args:
+        request (FixtureRequest): test arguments
+
+    Yields:
+        WebDriver: requested webdriver instance
+    """
     driver = (ConcreteWebDriverFactory()).get_web_driver(
         browser_make=request.param.get("arg_browser_make"),
         options=request.param.get("arg_capabilities"),
