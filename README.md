@@ -4,7 +4,7 @@
 
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![Build]](https://github.com/suneel944/uaf/actions/workflows/tests.yml/badge.svg)
+![Build](https://github.com/suneel944/uaf/actions/workflows/tests.yml/badge.svg)
 
 # UAF
 
