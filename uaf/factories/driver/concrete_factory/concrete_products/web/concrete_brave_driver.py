@@ -23,7 +23,13 @@ class ConcreteBraveDriver(AbstractBrave):
             WebDriver: brave webdriver instance
         """
         if options is None:
+            import os
+
+            env_data_fetch_response = os.getenv("BRAVE_EXECUTABLE", default=None)
+            if isinstance(env_data_fetch_response, type(None)):
+                raise RuntimeError("Environment variable 'BRAVE_EXECUTABLE' is not set!!")
             options = ChromeOptions()
+            options.binary_location = env_data_fetch_response
         return webdriver.Chrome(
             options=options,
             service=Service(executable_path=ChromeDriverManager(chrome_type=ChromeType.BRAVE).install()),
