@@ -42,6 +42,10 @@ class ConcreteMobileDriverFactory(abstract_factory.AbstractMobileDriverFactory):
 class ConcreteWebDriverFactory(abstract_factory.AbstractWebDriverFactory):
     """Concrete implementation of web driver factory"""
 
+    def __init__(self) -> None:
+        """Concrete implementation of webdriver instance"""
+        pass
+
     def get_web_driver(
         self,
         *,
