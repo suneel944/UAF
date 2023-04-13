@@ -2,6 +2,12 @@ from . import Enum
 
 
 class FilePaths(Enum):
+    """File Paths as constants
+
+    Args:
+        Enum (FilePaths): enum
+    """
+
     COMMON = "configs/test/common.yml"
     TEST_CONFIG_DEV = "configs/test/environments/dev.yml"
     TEST_CONFIG_QA = "configs/test/environments/qa.yml"

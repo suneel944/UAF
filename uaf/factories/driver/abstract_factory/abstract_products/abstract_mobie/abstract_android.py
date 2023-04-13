@@ -10,6 +10,6 @@ class AbstractAndroid(ABC):
         """Abstract method skeleton for fetching android driver instance
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): android mobile driver capabilities
         """
         pass

@@ -29,9 +29,9 @@ class ConcreteMobileDriver(AbstractMobile):
         """Concrete implementation of mobile driver instance creation
 
         Args:
-            os (MobileOs): _description_
-            test_execution_mode (TestExecutionMode): _description_
-            test_environment (TestEnvironments): _description_
+            os (MobileOs): mobile os enum
+            test_execution_mode (TestExecutionMode): test execution mode enum
+            test_environment (TestEnvironments): test environments enum
         """
         self.testEnv = test_environment
         self.os = os
@@ -41,10 +41,10 @@ class ConcreteMobileDriver(AbstractMobile):
         """Concrete implementation of fetching mobile driver
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): mobile capabilities
 
         Returns:
-            tuple[WebDriver, int]: (mobile driver instance, appium port)
+            tuple: (mobile driver instance, appium port)
         """
         common_config = YamlParser(FilePaths.COMMON)
         # launch appium service

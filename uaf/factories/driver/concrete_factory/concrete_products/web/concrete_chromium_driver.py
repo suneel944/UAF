@@ -17,7 +17,7 @@ class ConcreteChromiumDriver(AbstractChromium):
         """Concrete implementation method of fetching chromium web driver
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): chromium browser capabilities
 
         Returns:
             WebDriver: chromium webdriver instance

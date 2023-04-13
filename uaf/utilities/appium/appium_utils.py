@@ -2,11 +2,23 @@ from . import FakerUtils, FilePaths, MobileDeviceEnvironmentType, Optional, Yaml
 
 
 class AppiumUtils:
+    """Utility class for Appium"""
+
     def __init__(self) -> None:
+        """Constructor"""
         pass
 
     @staticmethod
     def execute_commands(command: list[str], check_output: bool = False):
+        """Executes command in a terminal/cmd/bash
+
+        Args:
+            command (list[str]): list of commnd strings
+            check_output (bool, optional): to indicate whether commandline execution result is required/or not. Defaults to False.
+
+        Returns:
+            Popen|bytes: process instance| byte data
+        """
         import subprocess
 
         if check_output:
@@ -16,6 +28,14 @@ class AppiumUtils:
 
     @staticmethod
     def launch_appium_service() -> int:
+        """launches appium service as per the configuration
+
+        Raises:
+            Exception: if unable to find port availability
+
+        Returns:
+            int: port number
+        """
         import socket
 
         config = YamlParser(FilePaths.COMMON)
@@ -52,6 +72,16 @@ class AppiumUtils:
 
     @staticmethod
     def wait_for_appium_service_to_load(max_wait_time: int, host: str, port: int):
+        """Waits for an appium service to load for a specified amount of time
+
+        Args:
+            max_wait_time (int): maximum wait time
+            host (str): host address
+            port (int): port number
+
+        Raises:
+            TimeoutError: if appium service failed to load in a specified amount of time
+        """
         import socket
         import time
 
@@ -71,6 +101,11 @@ class AppiumUtils:
 
     @staticmethod
     def purge_appium_node(port: int):
+        """Terminate/kill specified appium port
+
+        Args:
+            port (int): port number
+        """
         from psutil import AccessDenied, NoSuchProcess, ZombieProcess, process_iter
 
         for proc in process_iter():
@@ -102,12 +137,16 @@ class AppiumUtils:
 
     @staticmethod
     def purge_ios_simulator(simulator_name: str):
+        """Delete specified ios simulator
+
+        Args:
+            simulator_name (str): name of the simulator
+        """
         AppiumUtils.execute_commands(["xcrun", "simctl", "delete", "{}".format(simulator_name)])
 
     @staticmethod
     def create_android_emulator(emulator_name: Optional[str] = None, package: Optional[str] = None):
-        """
-        Creates an android emulator with user required name and system image a.k.a package\n
+        """Creates an android emulator with user required name and system image a.k.a package\n
 
         Ex: AppiumUtils.create_android_emulator("test_emulator_1", "system-images;android-31;google_apis;x86_64")
         Note :
@@ -117,6 +156,13 @@ class AppiumUtils:
             ii. Follow the [package installing instruction](https://developer.android.com/studio/command-line
             /sdkmanager#install)
             , if no packages/system images are installed yet in system
+
+        Args:
+            emulator_name (Optional[str], optional): name of the emulator. Defaults to None.
+            package (Optional[str], optional): installing android package information. Defaults to None.
+
+        Raises:
+            Exception: if white spaces are provided in emulator name
         """
         if emulator_name is None:
             faker = FakerUtils.get_instance()
@@ -146,6 +192,11 @@ class AppiumUtils:
 
     @staticmethod
     def purge_android_emulator(emulator_name: str):
+        """Delete specified android emulator
+
+        Args:
+            emulator_name (str): name of the emulator
+        """
         AppiumUtils.execute_commands(["avdmanager", "delete", "avd", "-n", "{}".format(emulator_name)])
 
     @staticmethod
@@ -154,6 +205,20 @@ class AppiumUtils:
         emulator_name: Optional[str] = None,
         package: Optional[str] = None,
     ):
+        """Fetch connected android devices
+
+        Args:
+            mobile_device_environment (MobileDeviceEnvironmentType): mobile device environment type enum
+            emulator_name (Optional[str], optional): name of the emulator. Defaults to None.
+            package (Optional[str], optional): installing android package information. Defaults to None.
+
+        Raises:
+            RuntimeError: if no physical devices are connected at the moment
+            TypeError: if unknown/unsupported device environment type is specified
+
+        Returns:
+            list[str]: list of connected android device ids
+        """
         cmd_output = AppiumUtils.execute_commands(["adb", "devices"])
         device_ids: list[str] = [
             line.split()[0] for line in cmd_output.splitlines()[1:] if line and not line.startswith("*")
@@ -174,6 +239,17 @@ class AppiumUtils:
     def fetch_connected_ios_devices_ids(
         mobile_device_environment: MobileDeviceEnvironmentType,
     ) -> list[str]:
+        """Fetch connected ios devices list
+
+        Args:
+            mobile_device_environment (MobileDeviceEnvironmentType): mobile device environment type enum
+
+        Raises:
+            TypeError: if provided invalid mobile device environment type
+
+        Returns:
+            list[str]: list of connected ios device ids
+        """
         match mobile_device_environment.value:
             case MobileDeviceEnvironmentType.PHYSICAL.value:
                 cmd_output = AppiumUtils.execute_commands(["idevice_id", "-l"])

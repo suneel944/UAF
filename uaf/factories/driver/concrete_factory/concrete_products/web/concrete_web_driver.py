@@ -19,21 +19,24 @@ class ConcreteWebDriver(AbstractWebDriver):
     """
 
     def __init__(self, *, browser_make: WebBrowserMake):
-        """Concrete implementation of web driver instance creation"""
+        """Concrete implementation of web driver instance creation
+
+        Args:
+            browser_make (WebBrowserMake): web browser make enum
+        """
         self.browser_make = browser_make
 
     def get_web_driver(self, *, options: Optional[dict[str, Any]] = None):
         """Concrete method implementation of fetching user specific web browser
 
         Args:
-            browser_make (WebBrowserMake): _description_
-            caps (_type_, optional): _description_. Defaults to Optional[dict[str, Any]]=Nones.
+            options (Optional[dict[str, Any]], optional): web browser capabilities. Defaults to None.
 
         Raises:
-            ValueError: if invalid browser type is specified
+            ValueError: if invalid browser type specified
 
         Returns:
-            WebDriver: web browser instance of user choice
+            WebDriver: webdriver instance
         """
 
         match self.browser_make.value:

@@ -16,7 +16,7 @@ class ConcreteIEDriver(AbstractIE):
         """Concrete implementation method of fetching ie web driver
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): ie browser capabilities
 
         Returns:
             WebDriver: ie webdriver instance

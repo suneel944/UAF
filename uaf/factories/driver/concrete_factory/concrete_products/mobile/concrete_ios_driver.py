@@ -7,13 +7,18 @@ class ConcreteIOSDriver(AbstractIOS):
     """Concrete implementation class of ios driver"""
 
     def __init__(self, remote_url):
+        """constructor
+
+        Args:
+            remote_url (str): remote url for remote execution
+        """
         self.remote_url = remote_url
 
     def get_driver(self, *, capabilities: dict[str, Any]):
         """Concrete implementation method of fetching ios driver
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): ios capabilities
 
         Returns:
             WebDriver: ios driver instance

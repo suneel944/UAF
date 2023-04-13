@@ -20,9 +20,9 @@ class AbstractMobile(ABC):
         """Instance creation skeleton
 
         Args:
-            os (MobileOs): _description_
-            test_execution_mode (TestExecutionMode): _description_
-            test_environment (TestEnvironments): _description_
+            os (MobileOs): enum
+            test_execution_mode (TestExecutionMode): enum
+            test_environment (TestEnvironments): enum
         """
         pass
 
@@ -31,6 +31,6 @@ class AbstractMobile(ABC):
         """Retrives mobile driver if present or creates and returns a new instance
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): mobile driver capabilities
         """
         pass

@@ -16,7 +16,7 @@ class ConcreteMsedgeDriver(AbstractMsedge):
         """Concrete implementation method of fetching msedge web driver
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): msedge browser capabilities
 
         Returns:
             WebDriver: msedge webdriver instance

@@ -12,10 +12,14 @@ class AbstractWebDriver(ABC):
         """Abstract skeleton for user specific browser instance creation
 
         Args:
-            browser_make (WebBrowserMake): _description_
+            browser_make (WebBrowserMake): web browser make enum
         """
         pass
 
     @abstractmethod
     def get_web_driver(self, *, options: Optional[dict[str, Any]] = None):
-        """Abstract skeleton method for fetching user specific web driver"""
+        """Abstract skeleton method for fetching user specific web driver
+
+        Args:
+            options (Optional[dict[str, Any]], optional): browser capabilities. Defaults to None.
+        """

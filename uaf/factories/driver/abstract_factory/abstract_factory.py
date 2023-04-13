@@ -25,8 +25,8 @@ class AbstractWebDriverFactory(metaclass=ABCMeta):
         """Abstract method skeleton for fetching web browser
 
         Args:
-            browser_make (WebBrowserMake): _description_
-            options (_type_, optional): _description_. Defaults to None.
+            browser_make (WebBrowserMake): web browser make enum
+            options (str, optional): browser capabilities. Defaults to None.
         """
         pass
 

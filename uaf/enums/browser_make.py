@@ -2,6 +2,8 @@ from . import Enum
 
 
 class WebBrowserMake(Enum):
+    """Web browser names as constants"""
+
     CHROME = "chrome"
     FIREFOX = "firefox"
     BRAVE = "brave"
@@ -12,6 +14,8 @@ class WebBrowserMake(Enum):
 
 
 class MobileWebBrowserMake(Enum):
+    """Mobile web browser name as constants"""
+
     CHROME = "Chrome"
     SAFARI = "Safari"
     CHROMIUM = "Chromium"

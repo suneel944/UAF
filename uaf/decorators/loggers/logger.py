@@ -11,8 +11,14 @@ T = TypeVar("T", bound=Callable[..., Any])
 
 
 def log(func: Optional[T] = None, *, log_return_value: bool = True) -> Callable[[Any], Any]:
-    """
-    Logs info and errors for any decorated function
+    """Logs info and errors for any decorated function
+
+    Args:
+        func (Optional[T], optional): decorating function. Defaults to None.
+        log_return_value (bool, optional): condition to decide whether to print return value or not. Defaults to True.
+
+    Returns:
+        Callable[[Any], Any]: decorated func
     """
 
     def _decorated(func: Callable[[Any], Any]) -> Callable[[Any], Any]:

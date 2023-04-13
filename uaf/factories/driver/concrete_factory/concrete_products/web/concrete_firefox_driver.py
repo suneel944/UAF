@@ -16,7 +16,7 @@ class ConcreteFirefoxDriver(AbstractFirefox):
         """Concrete implementation method of fetching firefox web driver
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): firefox browser capabilities
 
         Returns:
             WebDriver: firefox webdriver instance

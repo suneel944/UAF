@@ -10,6 +10,6 @@ class AbstractIOS(ABC):
         """Abstract method skeleton for fetching ios mobile driver instance
 
         Args:
-            capabilities (dict[str, Any]): _description_
+            capabilities (dict[str, Any]): ios mobile driver capabilities
         """
         pass

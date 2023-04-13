@@ -20,15 +20,18 @@ mongo_client.client
 
 
 def __get_unique_id() -> UUID:
+    """Generates random uuid
+
+    Returns:
+        UUID: random uuid
+    """
     return uuid4()
 
 
 @app.task
 @log
 def add_new_devices_to_list():
-    """
-    Adds newly connected devices to the device_stats collection with status available
-    """
+    """Adds newly connected devices to the device_stats collection with status available"""
     all_devices = [
         __device_list["device_id"]
         for __device_list in mongo_client.find_many(config.get_value("mongodb", "device_stat_collection"))
@@ -79,8 +82,16 @@ def add_new_devices_to_list():
 @app.task
 @log
 def reserve_device(mobile_os: str):
-    """
-    Reserves random available device and updates status in database
+    """Reserves random available device and updates status in database
+
+    Args:
+        mobile_os (str): mobile os type
+
+    Raises:
+        ValueError: if there are 0 availability of devices
+
+    Returns:
+        tuple: device_id, uuid
     """
     available_devices = mongo_client.find_many(
         config.get_value("mongodb", "device_stat_collection"),
@@ -112,8 +123,11 @@ def reserve_device(mobile_os: str):
 @app.task
 @log
 def release_device(device_id: str, session_id: UUID):
-    """
-    Releases device which is being requested and updates status in database
+    """Releases device which is being requested and updates status in database
+
+    Args:
+        device_id (str): unique device id
+        session_id (UUID): unique session id attached to given device id
     """
     mongo_client.update_one(
         config.get_value("mongodb", "device_stat_collection"),
@@ -130,9 +144,7 @@ def release_device(device_id: str, session_id: UUID):
 @app.task
 @log
 def check_device():
-    """
-    Fetch the list of devices from the database
-    """
+    """Fetch the list of devices from the database"""
     terminated_device_docs = [
         __device_list["device_id"]
         for __device_list in mongo_client.find_many(
@@ -148,11 +160,14 @@ def check_device():
         )
 
 
+# celery schedulers performing periodic tasks
 app.conf.beat_schedule = {
+    # update device availability in the database's device_stats collection and record the session details in device_sessions collection
     "update_device_availability": {
         "task": "uaf.device_farming.device_tasks.check_device",
         "schedule": crontab(minute="*/2"),
     },
+    # add new/unique devices to the list of devices and set their status as available
     "add_new_device_to_device_list": {
         "task": "uaf.device_farming.device_tasks.add_new_devices_to_list",
         "schedule": crontab(minute="*/3"),

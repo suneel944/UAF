@@ -12,5 +12,5 @@ class AbstractIE(ABC):
         """Abstract skeleton method for fetching IE driver
 
         Args:
-            caps (Optional[dict[str, Any]], optional): _description_. Defaults to None.
+            caps (Optional[dict[str, Any]], optional): browser capabilities. Defaults to None.
         """

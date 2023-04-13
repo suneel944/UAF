@@ -19,6 +19,17 @@ from uaf.utilities.appium.appium_utils import AppiumUtils
 
 @log
 def __fetch_required_arg_list(arg_mobile_app_type: MobileAppType, arg_mobile_os: MobileOs):
+    """Fetch required argument list of capabilities mandated for given mobile app type and mobile os
+
+    Args:
+        arg_mobile_app_type (MobileAppType): type of mobile app
+        arg_mobile_os (MobileOs): type of mobile os
+
+    Raises:
+        ValueError: if invalid mobile app type is provided
+    Returns:
+        list[str]: list of required mobile app capabilities
+    """
     match arg_mobile_app_type.value:
         case MobileAppType.HYBRID.value:
             required_list = [
@@ -59,6 +70,15 @@ def __fetch_required_arg_list(arg_mobile_app_type: MobileAppType, arg_mobile_os:
 
 @log
 def __check_required_keys_values_exist(arg_data: FixtureRequest, arg_required_key_list: list[str]):
+    """Checks if required key value dictionary is passed from test layer to fixture
+
+    Args:
+        arg_data (FixtureRequest): test arguments
+        arg_required_key_list (list[str]): list of required arguments to be passed from test layer
+
+    Raises:
+        ValueError: if missing required argument key in dict/if missing required argument value in provided dict
+    """
     # key check
     if not all(key in arg_data.param for key in arg_required_key_list):
         raise ValueError("Missing required arguments!! - {}".format(arg_required_key_list))
@@ -79,6 +99,24 @@ def __build_mobile_capabilities(
     arg_mobile_app_activty: Optional[str] = None,
     arg_mobile_app_package: Optional[str] = None,
 ):
+    """Generates mobile capabilities for user specified mobile app type and mobile os
+
+    Args:
+        arg_mobile_os (MobileOs): mobile os in which script has to be invoked
+        arg_mobile_app_type (MobileAppType): type of mobile app in which script has to be executed
+        arg_mobile_device_environment_type (MobileDeviceEnvironmentType): type of mobile device environment in which script has to be executed
+        arg_automation_name (AppiumAutomationName): appium automation name
+        arg_mobile_app_path (Optional[str], optional): path of mobile app where it is stored. Defaults to None.
+        arg_mobile_web_browser (Optional[MobileWebBrowserMake], optional): mobile web browser in which automation has to be executed. Defaults to None.
+        arg_mobile_app_activty (Optional[str], optional): mobile app activity. Defaults to None.
+        arg_mobile_app_package (Optional[str], optional): mobile app package. Defaults to None.
+
+    Raises:
+        ValueError: if invalid mobile app type is provided
+
+    Returns:
+        dict[str, Any]: mobile app capabilities dictionary
+    """
     caps = Capabilities.get_instance()
     device_id, session_id = reserve_device.delay(arg_mobile_os.value).get(timeout=10)
     match arg_mobile_app_type.value:
@@ -118,7 +156,7 @@ def __build_mobile_capabilities(
             )
             return caps.get_mobile_web_browser_capabilities(), device_id, session_id
         case _:
-            raise TypeError("Invalid mobile app type!")
+            raise ValueError("Invalid mobile app type!")
 
 
 @log
