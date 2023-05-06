@@ -1,3 +1,4 @@
+.env
 Pipfile.lock
 **/node_modules/
 **/dist

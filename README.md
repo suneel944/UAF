@@ -12,11 +12,14 @@ A universal automation framework to handle mobile testing, web testing, api test
 - API automation
 - Mobile automation
 - Device farming
+- ChatGpt integration
+
 ## Prerequisites
  - knowledge of appium
  - knowledge of selenium
  - knowledge of python
  - knowledge of api testing
+
 ## Installation
 
 There are two ways in which the framework can be utilised:
@@ -81,8 +84,24 @@ There are two ways in which the framework can be utilised:
         ```
         - Note: Once executed, all the tests should pass, otherwise please correct the mistakes and proceed further
 
+## Encrypt/decrypt sensitive information
+- To encrypt/decrypt sensitive information, use the generated AES-256 key
+  - If there is no AES-256 key present or if it is the first time that a script is being run then follow the below steps
+    - Open a python console which is pointing to project root and type the below
+      ```
+      python cli.py --mode generate_key
+      ```
+    - Copy the generated key and store it in the project directory inside a .env file for reference, create one if not present
+  - Now that we have a key handy, we can proceed with the sensitive data file encryption or decryption depending on the scenario
+    - To encrypt the data file
+      ```
+      python cli.py --mode encrypt --key <generated_secret_key> --data_file <relative_file_path>
+      ```
+    - To decrypt the data file
+      ```
+      python cli.py --mode decrypt --key <generated_secret_key> --data_file <relative_file_path>
+      ```
 
-    
 ## Running Tests
 - Now everything is setup and running fine, one final thing to test if things are really working. To run tests, run the following command
 
