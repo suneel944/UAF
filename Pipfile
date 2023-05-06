@@ -28,6 +28,8 @@ uplink = "*"
 isort = "*"
 black = "*"
 pre-commit = "*"
+openai = "*"
+cryptography = "*"
 
 [dev-packages]
 
