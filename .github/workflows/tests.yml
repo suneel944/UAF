@@ -35,6 +35,8 @@ jobs:
       run: pip install pipenv 
     - name: Setup make
       run: sudo apt install make
+    - name: Decrypt configs
+      run: python cli.py --mode decrypt --key ${{ secrets.SECURITY_KEY }} --data_file configs/test/common.yml
     - name: Setup test suite
       run: tox r -e py${{ matrix.py }} -vv --notest
     - name: Run test suite
