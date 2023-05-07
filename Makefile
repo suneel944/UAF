@@ -2,9 +2,17 @@
 
 .PHONY: install test tox build install-package clean pre-commit-install pre-commit help
 
+# Install pipenv
+install-pipenv:
+	pip install pipenv
+
+# Activate shell
+activate-shell:
+	pipenv shell
+
 # Install dependencies
 install:
-	pipenv install --dev
+	pipenv install --skip-lock
 
 # Run tests with pytest
 test:
@@ -21,6 +29,18 @@ build:
 # Install package
 install-package:
 	pipenv run pip install dist/*.whl
+
+# Generae new key
+generate-key:
+	pipenv run python cli.py --mode generate_key
+
+# Encrypt sensitive data file
+encrypt:
+	pipenv run python cli.py --mode decrypt --key ${{ secrets.SECURITY_KEY }} --data_file configs/test/common.yml
+
+# Decrypt sensitive data file
+decrypt:
+	
 
 # Clean up
 clean:
