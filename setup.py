@@ -1,15 +1,24 @@
 import io
 import os
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
-from uaf.common.helper import library_version
+with io.open(os.path.join(os.path.dirname(__file__), "README.md"), encoding="utf-8") as f:
+    long_description = f.read()
+
+
+def library_version():
+    # Define the logic to retrieve the library version
+    # Replace this with your actual implementation
+    return "1.0.0"
+
 
 setup(
     name="uaf",
     version=library_version(),
     description="Universal automation framework",
-    long_description=io.open(os.path.join(os.path.dirname("__file__"), "README.md"), encoding="utf-8").read(),
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     keywords=[
         "uaf",
         "uaf python",
@@ -17,20 +26,5 @@ setup(
         "web automation",
         "mobile automation",
     ],
-    author="Suneel Kaushik Subramanya",
-    author_email="suneel944@gmail.com",
-    maintainer="Suneel Kaushik Subramanya",
-    package_data={"uaf": ["py.typed"]},
-    packages=find_packages(include=["uaf*"]),
-    license="MIT",
-    # A list of classifiers to help users find your package on PyPI
-    classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3.11",
-        "Environment :: Console",
-        "Operating System :: OS Independent",
-        "Topic :: Software Development :: Quality Assurance",
-        "Topic :: Software Development :: Testing",
-    ],
+    # Rest of the setup configuration...
 )

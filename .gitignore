@@ -1,3 +1,4 @@
+.secrets
 .env
 Pipfile.lock
 **/node_modules/

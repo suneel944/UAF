@@ -1,6 +1,12 @@
-# Makefile for pytest automation framework with pipenv and pre-commit
-
 .PHONY: install test tox build install-package clean pre-commit-install pre-commit help
+
+# Install pipenv
+install-pipenv:
+	pip install pipenv
+
+# Activate shell
+activate-shell:
+	pipenv shell
 
 # Install dependencies
 install:
@@ -21,6 +27,18 @@ build:
 # Install package
 install-package:
 	pipenv run pip install dist/*.whl
+
+# Generate new key
+generate-key:
+	pipenv run python cli.py --mode generate_key
+
+# Encrypt sensitive data file
+encrypt:
+	pipenv run python cli.py --mode encrypt --key "$(security_key)" --data_file "configs/test/common.yml"
+
+# Decrypt sensitive data file
+decrypt:
+	pipenv run python cli.py --mode decrypt --key "$(security_key)" --data_file "configs/test/common.yml"
 
 # Clean up
 clean:
@@ -43,3 +61,19 @@ pre-commit-install:
 pre-commit:
 	pipenv run pre-commit run --all-files
 
+help:
+	@echo "Available targets:"
+	@echo "  install-pipenv         Install pipenv"
+	@echo "  activate-shell         Activate pipenv shell"
+	@echo "  install                Install dependencies"
+	@echo "  test                   Run tests with pytest"
+	@echo "  tox                    Run tests with tox"
+	@echo "  build                  Build package"
+	@echo "  install-package        Install package"
+	@echo "  generate-key           Generate new key"
+	@echo "  encrypt                Encrypt sensitive data file"
+	@echo "  decrypt                Decrypt sensitive data file"
+	@echo "  clean                  Clean up"
+	@echo "  pre-commit-install     Install pre-commit hooks"
+	@echo "  pre-commit             Run pre-commit hooks"
+	@echo "  help                   Show this help message"

@@ -1,6 +1,6 @@
 import argparse
 
-from uaf.cryptography.crypt import *
+from uaf.cryptic.crypt import decrypt_file, encrypt_file, generate_key
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Encrypt and decrypt sensitive data")
