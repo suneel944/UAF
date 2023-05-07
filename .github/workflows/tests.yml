@@ -1,6 +1,8 @@
 name: Tests
 
 on: 
+  repository_dispatch:
+    types: [ deployment-completed-event ]
   push:
   pull_request:
   workflow_dispatch:
