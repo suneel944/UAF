@@ -31,14 +31,12 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.py }}
-    - name: Install pipenv for test ${{ matrix.py }}
-      run: pip install pipenv 
     - name: Setup make
       run: sudo apt install make
-    - name: Decrypt configs
-      run: pipenv run python cli.py --mode decrypt --key ${{ secrets.SECURITY_KEY }} --data_file configs/test/common.yml
     - name: Setup test suite
       run: tox r -e py${{ matrix.py }} -vv --notest
+    - name: Decrypt configs
+      run: make decrypt
     - name: Run test suite
       run: tox r -e py${{ matrix.py }}
       env:
