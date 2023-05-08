@@ -1,4 +1,4 @@
-name: Tests
+name: Tests and notify
 
 on: 
   repository_dispatch:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-python:
+  build-python-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -51,3 +51,20 @@ jobs:
       env:
         CI_RUN: "yes"
         DIFF_AGAINST: HEAD
+  
+  notify-app-to-release-to-prod:
+    runs-on: ubuntu-latest
+    name: Notify app repo to release latest changes to prod
+    needs: build-python-and-test
+    if: github.event_name == 'repository_dispatch' && github.event.action == 'deployment-completed-event'
+    strategy:
+      matrix:
+        repos: [suneel944/simple_event_dispatch_micro]
+    steps:
+      - name: Dispatch event on ${{ matrix.repos }}
+        uses: peter-evans/repository-dispatch@v2
+        with: 
+          token: ${{ secrets.REPO_ACCESS_TOKEN_TO_TRIGGER_PROD_RELEASE_EVENTS }}
+          repository: ${{ matrix.repos }}
+          event-type: release-app-to-prod
+          client-payload: '{ "github": ${{ toJson(github) }}, "TAG": "${{ github.event.repository.name }}" }'
