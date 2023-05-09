@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pytest import FixtureRequest, fixture
+import pytest
 
 from tests.test_data.appium.capabilities import Capabilities
 from uaf.decorators.loggers.logger import log
@@ -15,6 +15,11 @@ from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
 from uaf.factories.driver.concrete_factory.concrete_factory import ConcreteMobileDriverFactory, ConcreteWebDriverFactory
 from uaf.utilities.appium.appium_utils import AppiumUtils
+
+
+@pytest.hookimpl
+def pytest_addoption(parser):
+    parser.addoption("--env", action="store", default="dev", help="Specify the test environment")
 
 
 @log
@@ -69,7 +74,7 @@ def __fetch_required_arg_list(arg_mobile_app_type: MobileAppType, arg_mobile_os:
 
 
 @log
-def __check_required_keys_values_exist(arg_data: FixtureRequest, arg_required_key_list: list[str]):
+def __check_required_keys_values_exist(arg_data: pytest.FixtureRequest, arg_required_key_list: list[str]):
     """Checks if required key value dictionary is passed from test layer to fixture
 
     Args:
@@ -160,8 +165,8 @@ def __build_mobile_capabilities(
 
 
 @log
-@fixture(scope="function")
-def mobile_driver(request: FixtureRequest):
+@pytest.fixture(scope="function")
+def mobile_driver(request: pytest.FixtureRequest):
     """Mobile driver fixture, responsible for yielding user requested mobile driver instance and clean up activity
 
     Args:
@@ -196,8 +201,8 @@ def mobile_driver(request: FixtureRequest):
     release_device.delay(device_id, session_id).get(timeout=10)
 
 
-@fixture(scope="function")
-def web_driver(request: FixtureRequest):
+@pytest.fixture(scope="function")
+def web_driver(request: pytest.FixtureRequest):
     """WebDriver fixture, responsible for yielding user requested web driver instance and clean up activity
 
     Args:

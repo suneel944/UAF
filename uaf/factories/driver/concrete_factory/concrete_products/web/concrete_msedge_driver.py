@@ -23,7 +23,7 @@ class ConcreteMsedgeDriver(AbstractMsedge):
         """
         if options is None:
             options = MsEdgeOptions()
-
+            options.add_argument("start-maximized")
         return webdriver.Edge(
             options=options,
             service=Service(executable_path=EdgeChromiumDriverManager().install()),

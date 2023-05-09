@@ -29,6 +29,7 @@ class ConcreteBraveDriver(AbstractBrave):
             if isinstance(env_data_fetch_response, type(None)):
                 raise RuntimeError("Environment variable 'BRAVE_EXECUTABLE' is not set!!")
             options = ChromeOptions()
+            options.add_argument("start-maximized")
             options.binary_location = env_data_fetch_response
         return webdriver.Chrome(
             options=options,
