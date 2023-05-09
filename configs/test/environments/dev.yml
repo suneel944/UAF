@@ -4,3 +4,16 @@ info:
 
 urls:
   google: https://www.google.co.in
+  amazon: https://www.amazon.in
+
+amazon:
+  hamburger_menu_panel_heading: shop by category
+  hamburger_menu_panel_sub_heading: TV, Appliances, Electronics
+  hamburger_menu_panel_sub_section_extension_heading: tv, audio & cameras
+  hamburger_menu_panel_sub_section_extension_choice: Televisions
+  filter_section_parent_category: Home Entertainment Brands
+  filter_section_parent_choice: Top Brands
+  filter_section_child_category: Brands
+  filter_section_child_choice: Samsung
+  sort_product_based_on: price-desc-rank
+  desired_product_index: 1
