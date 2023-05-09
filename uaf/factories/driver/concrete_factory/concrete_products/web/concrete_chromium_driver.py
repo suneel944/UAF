@@ -24,6 +24,7 @@ class ConcreteChromiumDriver(AbstractChromium):
         """
         if options is None:
             options = ChromeOptions()
+            options.add_argument("start-maximized")
         return webdriver.Chrome(
             options=options,
             service=Service(executable_path=ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),

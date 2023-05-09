@@ -23,7 +23,7 @@ class ConcreteIEDriver(AbstractIE):
         """
         if options is None:
             options = IeOptions()
-
+            options.add_argument("start-maximized")
         return webdriver.Ie(
             options=options,
             service=Service(executable_path=IEDriverManager().install()),

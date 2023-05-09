@@ -23,7 +23,7 @@ class ConcreteFirefoxDriver(AbstractFirefox):
         """
         if options is None:
             options = FirefoxOptions()
-
+            options.add_argument("--start-maximized")
         return webdriver.Firefox(
             options=options,
             service=Service(executable_path=GeckoDriverManager().install()),
