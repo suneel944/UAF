@@ -30,6 +30,7 @@ black = "*"
 pre-commit = "*"
 openai = "*"
 cryptography = "*"
+pytest-xdist = "*"
 
 [dev-packages]
 

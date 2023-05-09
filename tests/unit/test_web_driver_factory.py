@@ -4,6 +4,8 @@ from tests.fixtures.conftest import web_driver  # type: ignore
 from uaf.enums.browser_make import WebBrowserMake
 
 
+@mark.skip(reason="skipping as it requires manual set up of infra")
+@mark.unit_test
 @mark.parametrize(
     "web_driver",
     [

@@ -7,6 +7,7 @@ from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
 
 
+@mark.unit_test
 @mark.parametrize(
     "arg_browser_enum",
     [
@@ -22,6 +23,7 @@ def test_browser_enum(arg_browser_enum: WebBrowserMake):
     assert isinstance(arg_browser_enum.value, str)
 
 
+@mark.unit_test
 @mark.parametrize(
     "arg_filepath_enum",
     [
@@ -36,11 +38,13 @@ def test_filepath_enum(arg_filepath_enum: FilePaths):
     assert isinstance(arg_filepath_enum.value, str)
 
 
+@mark.unit_test
 @mark.parametrize("arg_mobileOs_enum", [MobileOs.ANDROID, MobileOs.IOS])
 def test_mobileOs_enum(arg_mobileOs_enum: MobileOs):
     assert isinstance(arg_mobileOs_enum.value, str)
 
 
+@mark.unit_test
 @mark.parametrize(
     "arg_test_env_enum",
     [
@@ -54,6 +58,7 @@ def test_test_environment_enum(arg_test_env_enum: TestEnvironments):
     assert isinstance(arg_test_env_enum.value, str)
 
 
+@mark.unit_test
 @mark.parametrize("arg_test_exec_mode", [TestExecutionMode.LOCAL, TestExecutionMode.REMOTE])
 def test_test_execution_mode_enum(arg_test_exec_mode: TestExecutionMode):
     assert isinstance(arg_test_exec_mode.value, str)

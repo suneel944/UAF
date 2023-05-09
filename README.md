@@ -85,6 +85,37 @@ There are two ways in which the framework can be utilised:
         - Note: Once executed, all the tests should pass, otherwise please correct the mistakes and proceed further
 
 ## Encrypt/decrypt sensitive information
+- Currently the project hosts sensitive data, which is encrypted using in house encryption using cryptography lib and since the file is encrypted and will remain encrypted indefinetly. Below is the template that needs to be followed for the same, at least initially to make the scripts and the project work. Later it can be modified according to the taste of individuals/ teams
+    ```
+    info:
+        name: Common
+
+    ports:
+        appipum_service_min_port_band: <min_port_number>
+        appium_service_max_port_band: <max_port_number>
+
+    appium:
+        appium_base_url_local: http://localhost:${port}/wd/hub
+        appium_base_url_remote: http://localhost:${port}/wd/hub
+
+    celery:
+        broker_url: amqp://<username>:<password>@localhost:5672
+        result_backend: rpc://<username>>:<password>@localhost:5672
+
+    mongodb:
+        connection_string: mongodb://<username>>:<password>@localhost:27018/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
+        device_stat_collection: device_stats
+        device_session_collection: device_sessions
+
+    chatgpt:
+        api_key: <chat_gpt_api_key>
+        engine: <chat_gpt_model>
+        max_tokens: <max_token>
+        temperature: <temperature>
+
+    waits:
+        max_time_out: <max_time_out_time_in_seconds_for_webdriver_wait>
+    ```
 - To encrypt/decrypt sensitive information, use the generated AES-256 key
   - If there is no AES-256 key present or if it is the first time that a script is being run then follow the below steps
     - Open a python console which is pointing to project root and type the below
@@ -108,8 +139,18 @@ There are two ways in which the framework can be utilised:
     ```bash
         pytest
         -or-
-        pytest -v <relative_testclass_py_file>
+        pytest -v <relative_path_testclass_py_file>
         -or-
-        pytest -v <relative_testclass_py_file>::<testcase_method_name>
+        pytest -v <relative_path_testclass_py_file>::<testcase_method_name>
+        -or-
+        pytest -v -m <tag_name>
+    ```
+- To run the test parallelly
+    ```
+    pytest -n <number_of_parallel_threads>
+    -or-
+    pytest -v <relative_path_testclass_py_file> -n <number_of_parallel_threads>
+    -or-
+    pytest -v -m <tag_name> -n <number_of_parallel_threads>
     ```
  - For more information on pytest, feel free to read the [docs](https://docs.pytest.org/en/7.1.x/contents.html)
