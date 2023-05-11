@@ -106,7 +106,7 @@ def reserve_device(mobile_os: str):
     session_doc = {
         "device_id": device_id,
         "start_time": datetime.utcnow().__str__(),
-        "session_id": uuid,
+        "session_id": str(uuid),
         "device_os": mobile_os,
         "end_time": None,
     }

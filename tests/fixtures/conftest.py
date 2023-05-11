@@ -201,6 +201,7 @@ def mobile_driver(request: pytest.FixtureRequest):
     release_device.delay(device_id, session_id).get(timeout=10)
 
 
+@log
 @pytest.fixture(scope="function")
 def web_driver(request: pytest.FixtureRequest):
     """WebDriver fixture, responsible for yielding user requested web driver instance and clean up activity
