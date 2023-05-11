@@ -9,7 +9,7 @@ from uaf.enums.mobile_os import MobileOs
 
 
 # TODO: Improvise the existing dockerfile and compose to accomodate the same
-@mark.skip(reason="require infrastructure to support to run this test case and is resource intensive")
+# @mark.skip(reason="require infrastructure to support to run this test case and is resource intensive")
 @mark.unit_test
 @mark.parametrize(
     "mobile_driver",
