@@ -13,6 +13,7 @@ A universal automation framework to handle mobile testing, web testing, api test
 - Mobile automation
 - Device farming
 - ChatGpt integration
+- Allure docker service integration
 
 ## Prerequisites
  - knowledge of appium
@@ -54,9 +55,9 @@ There are two ways in which the framework can be utilised:
             - Mongo express
                 - [url](http://localhost:8081/)
     ```bash
-    sudo docker compose up
+    sudo docker compose -f docker-compose-device-farm.yml up --build
     -or-
-    sudo docker compose up -d
+    sudo docker compose -f docker-compose-device-farm.yml up -d --build
     ```
     - Once the docker containers are up, next thing is to prep the mongodb and add few data so that it starts working
         - Create a database called **appium_device_stats**
@@ -83,6 +84,11 @@ There are two ways in which the framework can be utilised:
         pipenv run make install-package
         ```
         - Note: Once executed, all the tests should pass, otherwise please correct the mistakes and proceed further
+    - To visualise the report through allure docker service, docker containers have to be invoked. Use the below commands for the same
+        ```
+        sudo docker compose -f  docker-compose-report.yml up -d --build
+        ```
+    Now the project setup is done, lets proceed to next step
 
 ## Encrypt/decrypt sensitive information
 - Currently the project hosts sensitive data, which is encrypted using in house encryption using cryptography lib and since the file is encrypted and will remain encrypted indefinetly. Below is the template that needs to be followed for the same, at least initially to make the scripts and the project work. Later it can be modified according to the taste of individuals/ teams
@@ -152,5 +158,14 @@ There are two ways in which the framework can be utilised:
     pytest -v <relative_path_testclass_py_file> -n <number_of_parallel_threads>
     -or-
     pytest -v -m <tag_name> -n <number_of_parallel_threads>
+    ```
+- To run the test and visualise report using allure
+  - The allure reports will be available in the allure-reports which can be found in the project root 
+    ```
+    pytest -n <number_of_parallel_threads> --alluredir=allure-results
+    -or-
+    pytest -v <relative_path_testclass_py_file> -n <number_of_parallel_threads> --alluredir=allure-results
+    -or-
+    pytest -v -m <tag_name> -n <number_of_parallel_threads> --alluredir=allure-results
     ```
  - For more information on pytest, feel free to read the [docs](https://docs.pytest.org/en/7.1.x/contents.html)

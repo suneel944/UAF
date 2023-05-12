@@ -14,7 +14,7 @@ install:
 
 # Run tests with pytest
 test:
-	pipenv run pytest
+	pipenv run pytest -m unit_test
 
 # Run tests with tox
 tox:
