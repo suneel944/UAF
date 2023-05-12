@@ -31,7 +31,7 @@ pre-commit = "*"
 openai = "*"
 cryptography = "*"
 pytest-xdist = "*"
-pytest-html = "*"
+allure-pytest = "*"
 
 [dev-packages]
 
