@@ -1,8 +1,10 @@
 # UAF
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 ![Build](https://github.com/suneel944/uaf/actions/workflows/tests.yml/badge.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 ![](<img>)
 <img src="https://user-images.githubusercontent.com/45133346/231025360-58563129-c79b-4a4f-832d-80313a06e3bc.png" width="900" height="500"/>
+
 
 A universal automation framework to handle mobile testing, web testing, api testing in a single powerful python package with capabilities like device farming and so on.
 
