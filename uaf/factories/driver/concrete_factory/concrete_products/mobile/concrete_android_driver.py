@@ -27,8 +27,6 @@ class ConcreteAndroidDriver(AbstractAndroid):
         from appium.webdriver import Remote
 
         # launch android driver
-        # issue: https://github.com/appium/python-client/issues/863
-        # workaround : Set selenium version to 4.9.0
         return Remote(
             self.remote_url,
             options=UiAutomator2Options().load_capabilities(capabilities),
