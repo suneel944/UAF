@@ -1,6 +1,7 @@
-from . import Enum
+from . import Enum, unique
 
 
+@unique
 class MobileOs(Enum):
     """Mobile Os variants as constant
 

@@ -1,6 +1,7 @@
-from . import Enum
+from . import Enum, unique
 
 
+@unique
 class MobileAppType(Enum):
     """Mobile app type as constant
 

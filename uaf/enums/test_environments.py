@@ -1,6 +1,7 @@
-from . import Enum
+from . import Enum, unique
 
 
+@unique
 class TestEnvironments(Enum):
     """Test environments as constant
 
