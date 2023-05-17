@@ -5,11 +5,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from uaf.decorators.loggers.logger import log
-from uaf.utilities.selenium.locator.locator_utils import LocatorUtils
-from uaf.utilities.selenium.waiter.waits import Waits
+from uaf.utilities.ui.locator.locator_utils import LocatorUtils
+from uaf.utilities.ui.waiter.waits import Waits
 
 
-class Scroll:
+class ScrollUtils:
     def __init__(self, driver) -> None:
         self.driver = driver
         self.wait = Waits(driver)

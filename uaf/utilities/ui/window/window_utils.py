@@ -1,5 +1,5 @@
 from uaf.decorators.loggers.logger import log
-from uaf.utilities.selenium.waiter.waits import Waits
+from uaf.utilities.ui.waiter.waits import Waits
 
 
 class WindowUtils:

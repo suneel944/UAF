@@ -31,14 +31,14 @@ class Capabilities:
         """
         if kwargs.__len__() < 1:
             raise ValueError("Missing keyword arguments!")
-        self.__mobile_native_app_capabilities["platformName"] = kwargs.get("platform_name").value
-        self.__mobile_native_app_capabilities["app"] = kwargs.get("app_path")
-        self.__mobile_native_app_capabilities["deviceName"] = kwargs.get("device_name")
-        self.__mobile_native_app_capabilities["udid"] = kwargs.get("device_id")
-        self.__mobile_native_app_capabilities["appActivity"] = kwargs.get("app_activity")
-        self.__mobile_native_app_capabilities["appPackage"] = kwargs.get("app_package")
+        self.__mobile_native_app_capabilities["platformName"] = kwargs.get("platform_name").value  # type: ignore
+        self.__mobile_native_app_capabilities["app"] = kwargs.get("app_path")  # type: ignore
+        self.__mobile_native_app_capabilities["deviceName"] = kwargs.get("device_name")  # type: ignore
+        self.__mobile_native_app_capabilities["udid"] = kwargs.get("device_id")  # type: ignore
+        self.__mobile_native_app_capabilities["appActivity"] = kwargs.get("app_activity")  # type: ignore
+        self.__mobile_native_app_capabilities["appPackage"] = kwargs.get("app_package")  # type: ignore
         self.__mobile_native_app_capabilities["autoGrantPermissions"] = kwargs.get("auto_grant_permissions")
-        self.__mobile_native_app_capabilities["automationName"] = kwargs.get("automation_name").value
+        self.__mobile_native_app_capabilities["automationName"] = kwargs.get("automation_name").value  # type: ignore
 
     def set_mobile_web_browser_capabilities(self, **kwargs):
         """
@@ -54,12 +54,12 @@ class Capabilities:
         """
         if kwargs.__len__() < 1:
             raise ValueError("Missing keyword arguments!")
-        self.__mobile_web_browser_capabilities["platformName"] = kwargs.get("platform_name").value
+        self.__mobile_web_browser_capabilities["platformName"] = kwargs.get("platform_name").value  # type: ignore
         self.__mobile_web_browser_capabilities["deviceName"] = kwargs.get("device_name")
         self.__mobile_web_browser_capabilities["udid"] = kwargs.get("device_id")
         self.__mobile_web_browser_capabilities["autoGrantPermissions"] = kwargs.get("auto_grant_permissions")
-        self.__mobile_web_browser_capabilities["automationName"] = kwargs.get("automation_name").value
-        self.__mobile_web_browser_capabilities["browserName"] = kwargs.get("browser_name").value
+        self.__mobile_web_browser_capabilities["automationName"] = kwargs.get("automation_name").value  # type: ignore
+        self.__mobile_web_browser_capabilities["browserName"] = kwargs.get("browser_name").value  # type: ignore
 
     def set_mobile_hybrid_app_capabilities(self, **kwargs):
         """
@@ -78,15 +78,15 @@ class Capabilities:
         """
         if kwargs.__len__() < 1:
             raise ValueError("Missing keyword arguments!")
-        self.__mobile_hybrid_app_capabilities["platformName"] = kwargs.get("platform_name").value
+        self.__mobile_hybrid_app_capabilities["platformName"] = kwargs.get("platform_name").value  # type: ignore
         self.__mobile_hybrid_app_capabilities["app"] = kwargs.get("app_path")
         self.__mobile_hybrid_app_capabilities["deviceName"] = kwargs.get("device_name")
         self.__mobile_hybrid_app_capabilities["udid"] = kwargs.get("device_id")
         self.__mobile_hybrid_app_capabilities["appActivity"] = kwargs.get("app_activity")
         self.__mobile_hybrid_app_capabilities["appPackage"] = kwargs.get("app_package")
         self.__mobile_hybrid_app_capabilities["autoGrantPermissions"] = kwargs.get("auto_grant_permissions")
-        self.__mobile_hybrid_app_capabilities["automationName"] = kwargs.get("automation_name").value
-        self.__mobile_hybrid_app_capabilities["browserName"] = kwargs.get("browser_name").value
+        self.__mobile_hybrid_app_capabilities["automationName"] = kwargs.get("automation_name").value  # type: ignore
+        self.__mobile_hybrid_app_capabilities["browserName"] = kwargs.get("browser_name").value  # type: ignore
 
     def get_mobile_native_app_capabilities(self):
         return self.__mobile_native_app_capabilities

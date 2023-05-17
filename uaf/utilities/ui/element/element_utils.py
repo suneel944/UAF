@@ -1,10 +1,11 @@
 import time
 
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
 from uaf.decorators.loggers.logger import log
-from uaf.utilities.selenium.locator.locator_utils import LocatorUtils
-from uaf.utilities.selenium.waiter.waits import Waits
+from uaf.utilities.ui.locator.locator_utils import LocatorUtils
+from uaf.utilities.ui.waiter.waits import Waits
 
 
 class ElementUtils:
@@ -21,8 +22,20 @@ class ElementUtils:
         self.locator = LocatorUtils(driver)
 
     @log
-    def click_on_element(self, by_locator: tuple[str]):
-        """Clicks on a element which is interactable"""
+    def tap_on_element(self, positions: list[tuple[int, int]], duration: int):
+        self.driver.tap(positions, duration)
+        return self
+
+    @log
+    def click_on_element_using_js(self, by_locator: tuple[str, str]):
+        """Click on an element using javascript"""
+        element = self.locator.by_locator_to_mobile_element(by_locator)  # type: ignore
+        self.driver.execute_script("arguments[0].click();", element)
+        return self
+
+    @log
+    def click_on_element(self, by_locator: tuple[By, str]):
+        """Clicks on an element which is interactable"""
         self.wait.wait_for_element_to_be_clickable(by_locator).click()  # type: ignore
         return self
 
@@ -51,7 +64,7 @@ class ElementUtils:
         return self.driver.title
 
     @log
-    def send_keys(self, by_locator: tuple[str], text: str, enter_char_by_char: bool = False):
+    def send_keys(self, by_locator: tuple[By, str], text: str, enter_char_by_char: bool = False):
         """Send text to edit field
 
         Args:
@@ -68,11 +81,11 @@ class ElementUtils:
         return self
 
     @log
-    def get_text_from_element(self, by_locator: tuple[str]):
+    def get_text_from_element(self, by_locator: tuple[By, str]):
         return self.locator.by_locator_to_web_element(by_locator).text  # type: ignore
 
     @log
-    def select_from_drop_down(self, by_locator: tuple[str], value: str):
+    def select_from_drop_down(self, by_locator: tuple[By, str], value: str):
         element = self.locator.by_locator_to_web_element(by_locator)  # type: ignore
         select = Select(element)
         select.select_by_value(value)
