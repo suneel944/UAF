@@ -7,8 +7,8 @@ from uaf.enums.test_execution_mode import TestExecutionMode
 from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_mobile import AbstractMobile
 from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_android_driver import ConcreteAndroidDriver
 from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_ios_driver import ConcreteIOSDriver
-from uaf.utilities.appium.appium_utils import AppiumUtils
 from uaf.utilities.parser.yaml_parser_utils import YamlParser
+from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
 
 class ConcreteMobileDriver(AbstractMobile):
@@ -48,7 +48,7 @@ class ConcreteMobileDriver(AbstractMobile):
         """
         common_config = YamlParser(FilePaths.COMMON)
         # launch appium service
-        port = AppiumUtils.launch_appium_service()
+        port = CoreUtils.launch_appium_service()
         # return requested mobile driver
         remote_url = (
             common_config.get_value(
@@ -61,7 +61,7 @@ class ConcreteMobileDriver(AbstractMobile):
         from urllib.parse import urlparse
 
         host = urlparse(remote_url).hostname
-        AppiumUtils.wait_for_appium_service_to_load(30, host, port)
+        CoreUtils.wait_for_appium_service_to_load(30, host, port)
         return (
             ConcreteAndroidDriver(remote_url).get_driver(capabilities=capabilities)
             if self.os.value.__eq__(MobileOs.ANDROID.value)

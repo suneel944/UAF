@@ -1,7 +1,7 @@
 from . import FakerUtils, FilePaths, MobileDeviceEnvironmentType, Optional, YamlParser
 
 
-class AppiumUtils:
+class CoreUtils:
     """Utility class for Appium"""
 
     def __init__(self) -> None:
@@ -58,7 +58,7 @@ class AppiumUtils:
             )
 
         port: int = find_free_port()
-        AppiumUtils.execute_commands(
+        CoreUtils.execute_commands(
             [
                 "appium",
                 "-p",
@@ -125,7 +125,7 @@ class AppiumUtils:
         """
         if simulator_name.__contains__(" "):
             raise Exception("No white spaces allowed in emulator name")
-        AppiumUtils.execute_commands(
+        CoreUtils.execute_commands(
             [
                 "xcrun",
                 "simctl",
@@ -142,7 +142,7 @@ class AppiumUtils:
         Args:
             simulator_name (str): name of the simulator
         """
-        AppiumUtils.execute_commands(["xcrun", "simctl", "delete", "{}".format(simulator_name)])
+        CoreUtils.execute_commands(["xcrun", "simctl", "delete", "{}".format(simulator_name)])
 
     @staticmethod
     def create_android_emulator(emulator_name: Optional[str] = None, package: Optional[str] = None):
@@ -172,7 +172,7 @@ class AppiumUtils:
             )
         if emulator_name.__contains__(" "):
             raise Exception("No white spaces allowed in emulator name")
-        AppiumUtils.execute_commands(
+        CoreUtils.execute_commands(
             [
                 "avdmanager",
                 "--verbose",
@@ -197,7 +197,7 @@ class AppiumUtils:
         Args:
             emulator_name (str): name of the emulator
         """
-        AppiumUtils.execute_commands(["avdmanager", "delete", "avd", "-n", "{}".format(emulator_name)])
+        CoreUtils.execute_commands(["avdmanager", "delete", "avd", "-n", "{}".format(emulator_name)])
 
     @staticmethod
     def fetch_connected_android_devices_ids(
@@ -219,7 +219,7 @@ class AppiumUtils:
         Returns:
             list[str]: list of connected android device ids
         """
-        cmd_output = AppiumUtils.execute_commands(["adb", "devices"])
+        cmd_output = CoreUtils.execute_commands(["adb", "devices"])
         device_ids: list[str] = [
             line.split()[0] for line in cmd_output.splitlines()[1:] if line and not line.startswith("*")
         ]
@@ -230,7 +230,7 @@ class AppiumUtils:
                 return list(filter(lambda x: "emulator" not in x, device_ids))
             case MobileDeviceEnvironmentType.EMULATOR.value:
                 if device_ids.__len__() == 0:
-                    AppiumUtils.create_android_emulator(emulator_name, package)
+                    CoreUtils.create_android_emulator(emulator_name, package)
                 list(filter(lambda x: "emulator" in x, device_ids))
             case _:
                 raise TypeError("Supports only physical and emulator type!!")
@@ -252,10 +252,10 @@ class AppiumUtils:
         """
         match mobile_device_environment.value:
             case MobileDeviceEnvironmentType.PHYSICAL.value:
-                cmd_output = AppiumUtils.execute_commands(["idevice_id", "-l"])
+                cmd_output = CoreUtils.execute_commands(["idevice_id", "-l"])
                 return list(cmd_output.strip().split("\n"))
             case MobileDeviceEnvironmentType.SIMULATOR.value:
-                cmd_output = AppiumUtils.execute_commands(["xcrun", "simctl", "list"])
+                cmd_output = CoreUtils.execute_commands(["xcrun", "simctl", "list"])
                 return [line.split("(")[1].split(")")[0] for line in cmd_output.split("\n")]
             case _:
                 raise TypeError("Supports only physical and simulator type!!")

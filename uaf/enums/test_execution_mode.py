@@ -1,6 +1,7 @@
-from . import Enum
+from . import Enum, unique
 
 
+@unique
 class TestExecutionMode(Enum):
     """Test execution modes as constant
 

@@ -14,7 +14,7 @@ from uaf.enums.mobile_os import MobileOs
 from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
 from uaf.factories.driver.concrete_factory.concrete_factory import ConcreteMobileDriverFactory, ConcreteWebDriverFactory
-from uaf.utilities.appium.appium_utils import AppiumUtils
+from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
 
 @pytest.hookimpl
@@ -197,7 +197,7 @@ def mobile_driver(request: pytest.FixtureRequest):
     )
     yield driver
     driver.quit()
-    AppiumUtils.purge_appium_node(port)
+    CoreUtils.purge_appium_node(port)
     release_device.delay(device_id, session_id).get(timeout=10)
 
 

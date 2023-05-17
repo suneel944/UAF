@@ -14,6 +14,11 @@ amazon:
   filter_section_parent_category: Home Entertainment Brands
   filter_section_parent_choice: Top Brands
   filter_section_child_category: Brands
-  filter_section_child_choice: Samsung
+  filter_section_child_choice: Sony
   sort_product_based_on: price-desc-rank
   desired_product_index: 1
+  mobile_hamburger_menu_panel_heading: top categories for you
+  mobile_hamburger_menu_panel_sub_heading: See All Categories
+  mobile_category_parent: Software
+  mobile_category_child: Office
+  mobile_desired_product_index: 1

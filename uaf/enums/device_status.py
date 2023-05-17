@@ -1,6 +1,7 @@
-from . import Enum
+from . import Enum, unique
 
 
+@unique
 class DeviceStatus(Enum):
     """Device status as constant
 

@@ -1,9 +1,7 @@
-from selenium.webdriver.common.by import By
-
-from tests.pages.amazon.composition.filter_content import FilterContent
-from tests.pages.amazon.composition.header_content import HeaderContent
-from tests.pages.amazon.composition.product_content import ProductContent
 from tests.pages.base_page import BasePage
+from tests.pages.mobile.amazon.composition.category_content import CategoryContent
+from tests.pages.mobile.amazon.composition.header_content import HeaderContent
+from tests.pages.mobile.amazon.composition.product_content import ProductContent
 
 
 class HomePage(BasePage):
@@ -14,13 +12,13 @@ class HomePage(BasePage):
 
     # composition
 
-    def get_filter_content(self) -> FilterContent:
+    def get_category_content(self) -> CategoryContent:
         """Retrieves filter content instance
 
         Returns:
             FilterContent: FilterContent instance
         """
-        return FilterContent(self.driver)
+        return CategoryContent(self.driver)
 
     def get_header_content(self) -> HeaderContent:
         """Retrieves header content instance
@@ -40,5 +38,5 @@ class HomePage(BasePage):
 
     # page actions
     def go_to(self, url: str) -> "HomePage":
-        self.element_util.launch_url(url)
+        self.element.launch_url(url)
         return self

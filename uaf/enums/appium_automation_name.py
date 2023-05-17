@@ -1,6 +1,7 @@
-from . import Enum
+from . import Enum, unique
 
 
+@unique
 class AppiumAutomationName(Enum):
     """Appium automation name constants"""
 

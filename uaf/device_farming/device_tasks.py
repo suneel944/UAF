@@ -8,8 +8,8 @@ from uaf.decorators.loggers.logger import log
 from uaf.enums.device_status import DeviceStatus
 from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
 from uaf.enums.mobile_os import MobileOs
-from uaf.utilities.appium.appium_utils import AppiumUtils
 from uaf.utilities.database.mongo_utils import MongoUtility
+from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
 from . import FilePaths, YamlParser, get_celery_app
 
@@ -39,7 +39,7 @@ def add_new_devices_to_list():
     from platform import system
 
     if system().lower().__eq__("darwin"):
-        connected_ios_physical_devices_list = AppiumUtils.fetch_connected_ios_devices_ids(
+        connected_ios_physical_devices_list = CoreUtils.fetch_connected_ios_devices_ids(
             MobileDeviceEnvironmentType.PHYSICAL
         )
         unique_ios_physical_devices_list = [
@@ -58,7 +58,7 @@ def add_new_devices_to_list():
                     for x in unique_ios_physical_devices_list
                 ],
             )
-    connected_android_physical_devices_list = AppiumUtils.fetch_connected_android_devices_ids(
+    connected_android_physical_devices_list = CoreUtils.fetch_connected_android_devices_ids(
         MobileDeviceEnvironmentType.PHYSICAL
     )
     unique_android_physical_devices_list = [

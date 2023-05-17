@@ -1,8 +1,8 @@
 from pytest import mark
 
 from tests.fixtures.conftest import web_driver  # type: ignore
-from tests.pages.amazon.home_page import HomePage
-from tests.pages.amazon.product_page import ProductPage
+from tests.pages.web.amazon.home_page import HomePage
+from tests.pages.web.amazon.product_page import ProductPage
 from uaf.enums.browser_make import WebBrowserMake
 from uaf.enums.file_paths import FilePaths
 from uaf.utilities.parser.yaml_parser_utils import YamlParser

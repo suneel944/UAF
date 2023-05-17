@@ -9,9 +9,11 @@ from . import (
     GeckoDriverManager,
     IEDriverManager,
     OperaDriverManager,
+    unique,
 )
 
 
+@unique
 class DriverExecutablePaths(Enum):
     """Driver exectable paths as constants
 
