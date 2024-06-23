@@ -4,7 +4,9 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
 
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_firefox import AbstractFirefox
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_firefox import (
+    AbstractFirefox,
+)
 
 from . import webdriver
 
@@ -12,7 +14,7 @@ from . import webdriver
 class ConcreteFirefoxDriver(AbstractFirefox):
     """Concrete implementation class of firefox web driver"""
 
-    def get_web_driver(self, *, options: Optional[FirefoxOptions] = None):
+    def get_web_driver(self, *, options: FirefoxOptions | None = None):
         """Concrete implementation method of fetching firefox web driver
 
         Args:

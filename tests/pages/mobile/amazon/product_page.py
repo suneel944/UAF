@@ -9,7 +9,10 @@ class ProductPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
 
-    __TXT_PRODUCT_DETAILS: tuple[str, str] = (By.XPATH, ".//*[@id='featureSeeMore']//*[@id='feature-bullets']")
+    __TXT_PRODUCT_DETAILS: tuple[str, str] = (
+        By.XPATH,
+        ".//*[@id='featureSeeMore']//*[@id='feature-bullets']",
+    )
 
     def get_product_text_content(self) -> str | Any:
         self.window.switch_to_succeeding_window()

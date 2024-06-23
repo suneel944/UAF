@@ -9,7 +9,10 @@ class ProductContent(BasePage):
 
     # locators
     def __ele_product_tile(self, product_index: int):
-        return (By.XPATH, f".//*[@data-component-type='s-search-result'][{product_index}]")
+        return (
+            By.XPATH,
+            f".//*[@data-component-type='s-search-result'][{product_index}]",
+        )
 
     # composition
     def get_product_page(self):

@@ -4,9 +4,15 @@ from uaf.enums.file_paths import FilePaths
 from uaf.enums.mobile_os import MobileOs
 from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_mobile import AbstractMobile
-from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_android_driver import ConcreteAndroidDriver
-from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_ios_driver import ConcreteIOSDriver
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_mobile import (
+    AbstractMobile,
+)
+from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_android_driver import (
+    ConcreteAndroidDriver,
+)
+from uaf.factories.driver.concrete_factory.concrete_products.mobile.concrete_ios_driver import (
+    ConcreteIOSDriver,
+)
 from uaf.utilities.parser.yaml_parser_utils import YamlParser
 from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
@@ -53,9 +59,11 @@ class ConcreteMobileDriver(AbstractMobile):
         remote_url = (
             common_config.get_value(
                 "appium",
-                "appium_base_url_local"
-                if self.testExecMode.value.__eq__(TestExecutionMode.LOCAL.value)
-                else "appium_base_url_remote",
+                (
+                    "appium_base_url_local"
+                    if self.testExecMode.value.__eq__(TestExecutionMode.LOCAL.value)
+                    else "appium_base_url_remote"
+                ),
             ),
         )[0].replace("${port}", str(port))
         from urllib.parse import urlparse

@@ -29,7 +29,9 @@ class LocatorUtils:
         return self.__perform_by_to_element_conversion(by_locator)
 
     @log
-    def by_locator_to_mobile_element(self, by_locator: tuple[AppiumBy, str]) -> MobileElement:
+    def by_locator_to_mobile_element(
+        self, by_locator: tuple[AppiumBy, str]
+    ) -> MobileElement:
         """Convert by_locator to mobile version of webelement
 
         Args:

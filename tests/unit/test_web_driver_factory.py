@@ -16,7 +16,7 @@ from uaf.enums.browser_make import WebBrowserMake
     ],
     indirect=True,
 )
-def test_web_driver_factory(web_driver):
+def test_web_driver_factory(web_driver):  # noqa
     web_driver.get("https://www.google.co.in/")
     title = web_driver.title
     assert isinstance(title, str) and title.lower().__eq__("google")

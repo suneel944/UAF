@@ -9,7 +9,9 @@ setup(
     name="uaf",
     version=library_version(),
     description="Universal automation framework",
-    long_description=io.open(os.path.join(os.path.dirname("__file__"), "README.md"), encoding="utf-8").read(),
+    long_description=open(
+        os.path.join(os.path.dirname("__file__"), "README.md"), encoding="utf-8"
+    ).read(),
     keywords=[
         "uaf",
         "uaf python",

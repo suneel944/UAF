@@ -8,7 +8,7 @@ class AbstractFirefox(ABC):
     """Distinct firefox web base interface"""
 
     @abstractmethod
-    def get_web_driver(self, *, options: Optional[FirefoxOptions] = None):
+    def get_web_driver(self, *, options: FirefoxOptions | None = None):
         """Abstract skeleton method for fetching firefox driver
 
         Args:

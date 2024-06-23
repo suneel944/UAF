@@ -73,7 +73,9 @@ class MongoUtility:
         """
         if self._database is not None:
             return self._database.name
-        raise ValueError("current database is not set! or client connection is not made")
+        raise ValueError(
+            "current database is not set! or client connection is not made"
+        )
 
     @property
     def uuid_representation(self):
@@ -90,7 +92,9 @@ class MongoUtility:
         """
         if self.collections is not None:
             return self.collections
-        raise ValueError("current collection is not set! or client connection is not made")
+        raise ValueError(
+            "current collection is not set! or client connection is not made"
+        )
 
     def create_database(self, database_name: str, **kwargs: Any):
         """Creates a new database with a dummy collection
@@ -239,7 +243,9 @@ class MongoUtility:
         except OperationFailure as e:
             raise OperationFailure(f"Failed to insert document: {e}")
 
-    def insert_many(self, collection_name: str, documents: List[dict[str, Any]], **kwargs: Any):
+    def insert_many(
+        self, collection_name: str, documents: list[dict[str, Any]], **kwargs: Any
+    ):
         """Inserts one or more documents in the given collection of current active database in focus
 
         Args:
@@ -261,7 +267,7 @@ class MongoUtility:
     def find_one(
         self,
         collection_name: str,
-        filter: Optional[dict[str, Any]] = None,
+        filter: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
         """Fetches a document with respect to filter query provided
@@ -300,14 +306,16 @@ class MongoUtility:
             OperationFailure: if failed to find and replace document
         """
         try:
-            self.get_collection(collection_name).find_one_and_replace(filter, replacement, kwargs)
+            self.get_collection(collection_name).find_one_and_replace(
+                filter, replacement, kwargs
+            )
         except OperationFailure as e:
             raise OperationFailure(f"Failed to find and replace document: {e}")
 
     def find_many(
         self,
         collection_name: str,
-        filter: Optional[dict[str, Any]] = None,
+        filter: dict[str, Any] | None = None,
         **kwargs: Any,
     ):
         """Fetches list of documents with respect to filter query provided

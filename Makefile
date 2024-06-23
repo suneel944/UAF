@@ -1,79 +1,86 @@
-.PHONY: install test tox build install-package clean pre-commit-install pre-commit help
+.PHONY: upgrade-pip install-pre-commit run-pre-commit tox tox-env build install-wheel clean help test generate-key encrypt decrypt pre-commit-install
 
-# Install pipenv
-install-pipenv:
-	pip install pipenv
+# Variables
+TOX_ENV_NAME = py3119 # default environment name
+PACKAGE_NAME =
 
-# Activate shell
-activate-shell:
-	pipenv shell
-
-# Install dependencies
-install:
-	pipenv install --dev
+# Upgrade pip
+upgrade-pip:
+	@echo "Upgrading pip..."
+	@pip install --upgrade pip
 
 # Run tests with pytest
 test:
-	pipenv run pytest -m unit_test
+	@echo "Running tests with pytest..."
+	@pytest -m unit_test
 
-# Run tests with tox
+# Run tox with specified Python version
 tox:
-	pipenv run tox
+	@echo "Running tox for Python version $(PYTHON_VERSION)..."
+	@if [ -z "$(PYTHON_VERSION)" ]; then \
+		echo "Error: PYTHON_VERSION is not set. Supported versions: 3114, 3115, 3116, 3117, 3118, 3119."; \
+		exit 1; \
+	fi
+	@case $(PYTHON_VERSION) in \
+		3114|3115|3116|3117|3118|3119) tox -e py$(PYTHON_VERSION) ;; \
+		*) echo "Error: Unsupported PYTHON_VERSION. Supported versions: 3114, 3115, 3116, 3117, 3118, 3119."; exit 1 ;; \
+	esac
 
 # Build package
 build:
-	pipenv run python setup.py sdist bdist_wheel
+	@echo "Building package..."
+	@python -m build --wheel --outdir dist
 
-# Install package
-install-package:
-	pipenv run pip install dist/*.whl
+# Install package from wheel
+install-wheel:
+	@echo "Installing package..."
+	@pip install dist/*.whl --force-reinstall
 
 # Generate new key
 generate-key:
-	pipenv run python cli.py --mode generate_key
+	@echo "Generating new key..."
+	@python cli.py --mode generate_key
 
 # Encrypt sensitive data file
 encrypt:
-	pipenv run python cli.py --mode encrypt --key "$(security_key)" --data_file "configs/test/common.yml"
+	@echo "Encrypting sensitive data file..."
+	@python cli.py --mode encrypt --key "$(security_key)" --data_file "configs/test/common.yml"
 
 # Decrypt sensitive data file
 decrypt:
-	pipenv run python cli.py --mode decrypt --key "$(security_key)" --data_file "configs/test/common.yml"
+	@echo "Decrypting sensitive data file..."
+	@python cli.py --mode decrypt --key "$(security_key)" --data_file "configs/test/common.yml"
+
+# Install pre-commit hooks
+install-pre-commit:
+	@echo "Installing pre-commit hooks..."
+	@pre-commit install
+
+# Run pre-commit hooks
+run-pre-commit:
+	@echo "Running pre-commit hooks..."
+	@pre-commit run --all-files || ( echo "Pre-commit checks failed"; exit 1 )
 
 # Clean up
 clean:
-	pipenv --rm
-	rm -rf .pytest_cache
-	rm -rf .tox
-	rm -rf dist
-	rm -rf build
-	rm -rf .mypy_cache
-	rm -rf *.egg-info
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
-	find . -type f -name "*.pyo" -delete
+	@echo "Cleaning up..."
+	@rm -rf .pytest_cache .tox dist build .mypy_cache *.egg-info
+	@find . -type d -name "__pycache__" -exec rm -rf {} +
+	@find . -type f -name "*.pyc" -delete
+	@find . -type f -name "*.pyo" -delete
 
-# Install pre-commit hooks
-pre-commit-install:
-	pipenv run pre-commit install
-
-# Run pre-commit hooks
-pre-commit:
-	pipenv run pre-commit run --all-files
-
+# Helper section
 help:
 	@echo "Available targets:"
-	@echo "  install-pipenv         Install pipenv"
-	@echo "  activate-shell         Activate pipenv shell"
-	@echo "  install                Install dependencies"
-	@echo "  test                   Run tests with pytest"
-	@echo "  tox                    Run tests with tox"
-	@echo "  build                  Build package"
-	@echo "  install-package        Install package"
-	@echo "  generate-key           Generate new key"
-	@echo "  encrypt                Encrypt sensitive data file"
-	@echo "  decrypt                Decrypt sensitive data file"
-	@echo "  clean                  Clean up"
-	@echo "  pre-commit-install     Install pre-commit hooks"
-	@echo "  pre-commit             Run pre-commit hooks"
-	@echo "  help                   Show this help message"
+	@echo "  upgrade-pip        - Upgrade pip"
+	@echo "  test               - Run tests with pytest"
+	@echo "  tox                - Run tox with specified Python version"
+	@echo "  build              - Build package"
+	@echo "  install-wheel      - Install wheel"
+	@echo "  generate-key       - Generate new key"
+	@echo "  encrypt            - Encrypt sensitive data file"
+	@echo "  decrypt            - Decrypt sensitive data file"
+	@echo "  install-pre-commit - Install pre-commit hooks"
+	@echo "  run-pre-commit     - Run pre-commit hooks"
+	@echo "  clean              - Clean up"
+	@echo "  help               - Show this help message"

@@ -59,6 +59,8 @@ def test_test_environment_enum(arg_test_env_enum: TestEnvironments):
 
 
 @mark.unit_test
-@mark.parametrize("arg_test_exec_mode", [TestExecutionMode.LOCAL, TestExecutionMode.REMOTE])
+@mark.parametrize(
+    "arg_test_exec_mode", [TestExecutionMode.LOCAL, TestExecutionMode.REMOTE]
+)
 def test_test_execution_mode_enum(arg_test_exec_mode: TestExecutionMode):
     assert isinstance(arg_test_exec_mode.value, str)

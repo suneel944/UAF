@@ -1,10 +1,14 @@
-# UAF
+<div align="center">
+<img src="images/uaf.svg" width="600" height="500"/>
+
+# `UAF`
+<p class="align center">
+
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 ![Build](https://github.com/suneel944/uaf/actions/workflows/tests.yml/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-![](<img>)
-<img src="https://user-images.githubusercontent.com/45133346/231025360-58563129-c79b-4a4f-832d-80313a06e3bc.png" width="900" height="500"/>
 
+</div>
 
 A universal automation framework to handle mobile testing, web testing, api testing in a single powerful python package with capabilities like device farming and so on.
 
@@ -31,22 +35,22 @@ There are two ways in which the framework can be utilised:
 
 ### Steps:
 - **Prep the system:**
-    - [Install docker](https://www.docker.com/products/docker-desktop/)
+    - Install [docker](https://www.docker.com/products/docker-desktop/)
         - [Windows installation](https://docs.docker.com/desktop/install/windows-install/)
         - [Linux installation](https://docs.docker.com/desktop/install/linux-install/)
         - [Mac installation](https://docs.docker.com/desktop/install/mac-install/)
-    - [Install appium](https://appium.io/downloads.html)
-    - [Install appium inspector](https://github.com/appium/appium-inspector/releases)
-    - [Install android studio](https://developer.android.com/studio)
+    - Install [appium](https://appium.io/downloads.html)
+    - Install [appium inspector](https://github.com/appium/appium-inspector/releases)
+    - Install [android studio](https://developer.android.com/studio)
         - cli tools and sdkmanager need to be properly installed and configured, as in the later part these are required in automatic creation of emulators for testing using device farming
         - avdmanager, sdkmanager command availability in the terminal/cmd/powershell
-    - [Install xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) - **Optional - applicable only to mac device users**
-    - [Download python 3.11](https://www.python.org/downloads/release/python-3110/), **minimum requirement >= 3.11**
-    - Install pipenv as, it is used as a defacto for the package manager
-        ```bash
-        pip install pipenv
-        Note: based on the python installation or configuration, the keyword for pip can be either pip/pip3
-        ```
+    - Install [xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) - **Optional - applicable only to mac device users**
+    - Install [Python](https://www.python.org/downloads/) **(version >= 3.11 and < 3.12)**
+    - Install [Make](https://formulae.brew.sh/formula/make)
+    - Install [Pip](https://pip.pypa.io/en/stable/cli/pip_install/)
+    - Install [Tox](https://pypi.org/project/tox/)
+    - Install [Pre-commit](https://pypi.org/project/pre-commit/)
+    - Install IDE of your choice, (recommended: [VSCode](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/))
 - **Prep project:**
     - There is an inbuilt device farming capability and for this we need to execute below command
         - The below command invokes two dashboards and two databases to manage device farming activities
@@ -69,23 +73,45 @@ There are two ways in which the framework can be utilised:
             - device_sessions
                 - Holds data pertaining to device sessions
     - Now the MongoDb and RabbitMQ are configured, let's head further steps which lead us to completion
-    - Install project dependencies
-        ```bash
-        pipenv run make install
-        ``` 
-    - Invoke celery, this is required for device farming to work
-        ```bash
-        pipenv run celery -A uaf.device_farming.device_tasks worker -B -E -O fair --loglevel=INFO
-        ```
-    - Build the package - **Optional**
-        ```bash
-        pipenv run make build
-        ```
-    - Install the package to current pipenv package manager - **Optional**
-        ```bash
-        pipenv run make install-package
-        ```
-        - Note: Once executed, all the tests should pass, otherwise please correct the mistakes and proceed further
+    - Ensure you have the following installed before diving into the action:
+
+
+## Getting Started
+
+To prepare your project, execute the following commands in order:
+
+```bash
+make tox PYTHON_VERSION="3114" # supported versions: [3114 => python 3.11.4, 3115 => python 3.11.5, 3116 => python 3.11.6, 3117 => python 3.11.7, 3118 => python 3.11.8, 3119 => python 3.11.9]. Make sure to check that your installed Python version matches one from the list.
+```
+
+To activate the Tox environment, use the following commands:
+
+```bash
+# Ensure the .tox folder exists in the root project directory.
+# On macOS/Linux:
+source .tox/<envname>/bin/activate
+# On Windows:
+.\.tox\<envname>\Scripts\activate
+```
+
+Replace `<envname>` with the environment name, typically 'py'. If Tox is configured for different environments, it might be 'py31x'.
+
+When using your preferred IDE, update the interpreter path. Here’s how to do it:
+
+```bash
+which python3
+```
+
+This command outputs the path of the active interpreter, but ensure the Tox environment is activated first.
+
+For [VSCode](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/):
+
+1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS).
+2. In the drop-down, type `Python: Select Interpreter` and choose the first option.
+3. In the next drop-down, select `Enter interpreter path...` and input the path from `which python3`.
+4. Hit enter, and your IDE should now be configured correctly.
+
+For [PyCharm](https://www.jetbrains.com/pycharm/), refer to their documentation for setting the interpreter path, as the process may differ.
     - To visualise the report through allure docker service, docker containers have to be invoked. Use the below commands for the same
         ```
         sudo docker compose -f  docker-compose-report.yml up -d --build

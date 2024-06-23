@@ -12,7 +12,10 @@ completion = openai.ChatCompletion()
 
 class bot:
     def get_chat_response(
-        self, question: str, chat_log: Optional[list[dict[str, Any]]] = None, require_chat_log_output: bool = False
+        self,
+        question: str,
+        chat_log: list[dict[str, Any]] | None = None,
+        require_chat_log_output: bool = False,
     ):
         """Provisions users to asks question on trivial or complicated scenarios using chat gpt
 
@@ -22,11 +25,11 @@ class bot:
         if chat_log is None:
             chat_log = [
                 {
-                    'role': 'system',
-                    'content': 'You are a helpful, upbeat and funny assistant.',
+                    "role": "system",
+                    "content": "You are a helpful, upbeat and funny assistant.",
                 }
             ]
-        chat_log.append({'role': 'user', 'content': question})
+        chat_log.append({"role": "user", "content": question})
         response = completion.create(
             model=config.get_value("chatgpt", "engine"),
             messages=chat_log,
@@ -35,8 +38,8 @@ class bot:
             n=1,
             stop=None,
         )
-        answer = response.choices[0]['message']['content']
-        chat_log.append({'role': 'assistant', 'content': answer})
+        answer = response.choices[0]["message"]["content"]
+        chat_log.append({"role": "assistant", "content": answer})
         if require_chat_log_output:
             return answer, chat_log
         return bot.__print_response(answer)

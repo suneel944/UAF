@@ -116,4 +116,6 @@ class SwipeUtils:
             max_swipe -= 1  # decrement
 
             if max_swipe == 0 and self.driver.page_source.find(text) == -1:
-                raise NoSuchElementException(f"Text not found after swiping {max_swipe} times")
+                raise NoSuchElementException(
+                    f"Text not found after swiping {max_swipe} times"
+                )

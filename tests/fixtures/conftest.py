@@ -1,5 +1,3 @@
-from typing import Optional
-
 import pytest
 
 from tests.test_data.appium.capabilities import Capabilities
@@ -13,17 +11,24 @@ from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
 from uaf.enums.mobile_os import MobileOs
 from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
-from uaf.factories.driver.concrete_factory.concrete_factory import ConcreteMobileDriverFactory, ConcreteWebDriverFactory
+from uaf.factories.driver.concrete_factory.concrete_factory import (
+    ConcreteMobileDriverFactory,
+    ConcreteWebDriverFactory,
+)
 from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
 
 @pytest.hookimpl
 def pytest_addoption(parser):
-    parser.addoption("--env", action="store", default="dev", help="Specify the test environment")
+    parser.addoption(
+        "--env", action="store", default="dev", help="Specify the test environment"
+    )
 
 
 @log
-def __fetch_required_arg_list(arg_mobile_app_type: MobileAppType, arg_mobile_os: MobileOs):
+def __fetch_required_arg_list(
+    arg_mobile_app_type: MobileAppType, arg_mobile_os: MobileOs
+):
     """Fetch required argument list of capabilities mandated for given mobile app type and mobile os
 
     Args:
@@ -74,7 +79,9 @@ def __fetch_required_arg_list(arg_mobile_app_type: MobileAppType, arg_mobile_os:
 
 
 @log
-def __check_required_keys_values_exist(arg_data: pytest.FixtureRequest, arg_required_key_list: list[str]):
+def __check_required_keys_values_exist(
+    arg_data: pytest.FixtureRequest, arg_required_key_list: list[str]
+):
     """Checks if required key value dictionary is passed from test layer to fixture
 
     Args:
@@ -86,11 +93,13 @@ def __check_required_keys_values_exist(arg_data: pytest.FixtureRequest, arg_requ
     """
     # key check
     if not all(key in arg_data.param for key in arg_required_key_list):
-        raise ValueError("Missing required arguments!! - {}".format(arg_required_key_list))
+        raise ValueError(f"Missing required arguments!! - {arg_required_key_list}")
     # value check
     value_list = [arg_data.param.get(i) for i in arg_required_key_list]
     if None in value_list:
-        raise ValueError("Require argument cannot be none type!! - {}".format(arg_required_key_list))
+        raise ValueError(
+            f"Require argument cannot be none type!! - {arg_required_key_list}"
+        )
 
 
 @log
@@ -99,10 +108,10 @@ def __build_mobile_capabilities(
     arg_mobile_app_type: MobileAppType,
     arg_mobile_device_environment_type: MobileDeviceEnvironmentType,
     arg_automation_name: AppiumAutomationName,
-    arg_mobile_app_path: Optional[str] = None,
-    arg_mobile_web_browser: Optional[MobileWebBrowserMake] = None,
-    arg_mobile_app_activty: Optional[str] = None,
-    arg_mobile_app_package: Optional[str] = None,
+    arg_mobile_app_path: str | None = None,
+    arg_mobile_web_browser: MobileWebBrowserMake | None = None,
+    arg_mobile_app_activty: str | None = None,
+    arg_mobile_app_package: str | None = None,
 ):
     """Generates mobile capabilities for user specified mobile app type and mobile os
 
@@ -177,7 +186,9 @@ def mobile_driver(request: pytest.FixtureRequest):
     """
     __check_required_keys_values_exist(
         request,
-        __fetch_required_arg_list(request.param.get("arg_mobile_app_type"), request.param.get("arg_mobile_os")),
+        __fetch_required_arg_list(
+            request.param.get("arg_mobile_app_type"), request.param.get("arg_mobile_os")
+        ),
     )
     capabilities, device_id, session_id = __build_mobile_capabilities(
         request.param.get("arg_mobile_os"),

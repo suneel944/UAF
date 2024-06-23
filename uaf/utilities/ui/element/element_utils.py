@@ -64,7 +64,9 @@ class ElementUtils:
         return self.driver.title
 
     @log
-    def send_keys(self, by_locator: tuple[By, str], text: str, enter_char_by_char: bool = False):
+    def send_keys(
+        self, by_locator: tuple[By, str], text: str, enter_char_by_char: bool = False
+    ):
         """Send text to edit field
 
         Args:

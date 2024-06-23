@@ -4,7 +4,9 @@ from selenium.webdriver.ie.options import Options as IeOptions
 from selenium.webdriver.ie.service import Service
 from webdriver_manager.microsoft import IEDriverManager
 
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_ie import AbstractIE
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_ie import (
+    AbstractIE,
+)
 
 from . import webdriver
 
@@ -12,7 +14,7 @@ from . import webdriver
 class ConcreteIEDriver(AbstractIE):
     """Concrete implementation class of chromium web driver"""
 
-    def get_web_driver(self, *, options: Optional[IeOptions] = None):
+    def get_web_driver(self, *, options: IeOptions | None = None):
         """Concrete implementation method of fetching ie web driver
 
         Args:

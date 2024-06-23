@@ -8,7 +8,7 @@ class AbstractIE(ABC):
     """Distinct IE web base interface"""
 
     @abstractmethod
-    def get_web_driver(self, *, options: Optional[IeOptions] = None):
+    def get_web_driver(self, *, options: IeOptions | None = None):
         """Abstract skeleton method for fetching IE driver
 
         Args:

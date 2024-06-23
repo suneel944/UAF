@@ -9,7 +9,9 @@ from uaf.enums.mobile_os import MobileOs
 
 
 # TODO: Improvise the existing dockerfile and compose to accomodate the same
-@mark.skip(reason="require infrastructure to support to run this test case and is resource intensive")
+@mark.skip(
+    reason="require infrastructure to support to run this test case and is resource intensive"
+)
 @mark.unit_test
 @mark.parametrize(
     "mobile_driver",
@@ -24,7 +26,7 @@ from uaf.enums.mobile_os import MobileOs
     ],
     indirect=True,
 )
-def test_mobile_driver_factory(mobile_driver):
+def test_mobile_driver_factory(mobile_driver):  # noqa
     mobile_driver.get("https://www.google.co.in/")
     title = mobile_driver.title
     assert isinstance(title, str) and title.lower().__eq__("google")

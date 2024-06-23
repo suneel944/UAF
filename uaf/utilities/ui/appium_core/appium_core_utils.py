@@ -95,7 +95,9 @@ class CoreUtils:
                 except OSError:
                     elapsed_time = time.time() - start_time
                     if elapsed_time >= max_wait_time:
-                        raise TimeoutError("Timed out waiting for Appium server to start")
+                        raise TimeoutError(
+                            "Timed out waiting for Appium server to start"
+                        )
                     else:
                         time.sleep(1)
 
@@ -130,8 +132,8 @@ class CoreUtils:
                 "xcrun",
                 "simctl",
                 "create",
-                "{}".format(simulator_name),
-                "{}".format(package),
+                f"{simulator_name}",
+                f"{package}",
             ]
         )
 
@@ -142,10 +144,12 @@ class CoreUtils:
         Args:
             simulator_name (str): name of the simulator
         """
-        CoreUtils.execute_commands(["xcrun", "simctl", "delete", "{}".format(simulator_name)])
+        CoreUtils.execute_commands(["xcrun", "simctl", "delete", f"{simulator_name}"])
 
     @staticmethod
-    def create_android_emulator(emulator_name: Optional[str] = None, package: Optional[str] = None):
+    def create_android_emulator(
+        emulator_name: Optional[str] = None, package: Optional[str] = None
+    ):
         """Creates an android emulator with user required name and system image a.k.a package\n
 
         Ex: AppiumUtils.create_android_emulator("test_emulator_1", "system-images;android-31;google_apis;x86_64")
@@ -180,9 +184,9 @@ class CoreUtils:
                 "avd",
                 "--force",
                 "--name",
-                '"{}"'.format(emulator_name),
+                f'"{emulator_name}"',
                 "--package",
-                '"{}"'.format(package),
+                f'"{package}"',
                 "--tag",
                 '"google_apis"',
                 "--abi",
@@ -197,7 +201,9 @@ class CoreUtils:
         Args:
             emulator_name (str): name of the emulator
         """
-        CoreUtils.execute_commands(["avdmanager", "delete", "avd", "-n", "{}".format(emulator_name)])
+        CoreUtils.execute_commands(
+            ["avdmanager", "delete", "avd", "-n", f"{emulator_name}"]
+        )
 
     @staticmethod
     def fetch_connected_android_devices_ids(
@@ -221,12 +227,16 @@ class CoreUtils:
         """
         cmd_output = CoreUtils.execute_commands(["adb", "devices"])
         device_ids: list[str] = [
-            line.split()[0] for line in cmd_output.splitlines()[1:] if line and not line.startswith("*")
+            line.split()[0]
+            for line in cmd_output.splitlines()[1:]
+            if line and not line.startswith("*")
         ]
         match mobile_device_environment.value:
             case MobileDeviceEnvironmentType.PHYSICAL.value:
                 if device_ids.__len__() == 0:
-                    raise RuntimeError("No physical device(s) connected/available at the moment!")
+                    raise RuntimeError(
+                        "No physical device(s) connected/available at the moment!"
+                    )
                 return list(filter(lambda x: "emulator" not in x, device_ids))
             case MobileDeviceEnvironmentType.EMULATOR.value:
                 if device_ids.__len__() == 0:
@@ -256,6 +266,8 @@ class CoreUtils:
                 return list(cmd_output.strip().split("\n"))
             case MobileDeviceEnvironmentType.SIMULATOR.value:
                 cmd_output = CoreUtils.execute_commands(["xcrun", "simctl", "list"])
-                return [line.split("(")[1].split(")")[0] for line in cmd_output.split("\n")]
+                return [
+                    line.split("(")[1].split(")")[0] for line in cmd_output.split("\n")
+                ]
             case _:
                 raise TypeError("Supports only physical and simulator type!!")

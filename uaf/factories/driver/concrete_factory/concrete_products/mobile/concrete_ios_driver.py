@@ -1,6 +1,8 @@
 from typing import Any
 
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_ios import AbstractIOS
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_ios import (
+    AbstractIOS,
+)
 
 
 class ConcreteIOSDriver(AbstractIOS):

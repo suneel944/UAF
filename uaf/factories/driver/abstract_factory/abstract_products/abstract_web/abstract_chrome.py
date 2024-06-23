@@ -8,7 +8,7 @@ class AbstractChrome(ABC):
     """Distinct chrome web base interface"""
 
     @abstractmethod
-    def get_web_driver(self, *, options: Optional[ChromeOptions] = None):
+    def get_web_driver(self, *, options: ChromeOptions | None = None):
         """Abstract skeleton method for fetching chrome driver
 
         Args:

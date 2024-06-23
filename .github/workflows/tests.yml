@@ -2,67 +2,71 @@ name: Tests and notify
 
 on: 
   repository_dispatch:
-    types: [ deployment-completed-event ]
+    types: [deployment-completed-event]
   push:
   pull_request:
   workflow_dispatch:
 
 jobs:
-  build-python-and-test:
+  build-uaf:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        py:
-          - "3.11"
-        os:
-          - ubuntu-latest
+        os: [ubuntu-latest]
+        python-version: 
+          ["3.11.4", "3.11.5", "3.11.6", "3.11.7", "3.11.8", "3.11.9"]
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
-        fetch-depth: 0s
+        fetch-depth: 0
 
-    - name: Setup python for test ${{ matrix.py }}
-      uses: actions/setup-python@v4
+    - name: Setup python for test ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.py }}
+        python-version: ${{ matrix.python-version }}
 
     - name: Update pip
       run: pip install --upgrade pip
 
     - name: Install dependencies
       run: |
-        sudo apt install make
-        pip install pipenv
-        pip install tox tox-gh-actions
-    
-    - name: Install uaf package to pipenv environment
-      run: pipenv install .
-    
-    - name: Setup test suite
-      run: tox r -e py${{ matrix.py }} -vv --notest
-    
+        sudo apt-get update
+        sudo apt-get install -y make
+        pip install build pre-commit tox tox-gh-actions cryptography
+
+    - name: Upgrade pip
+      run: make upgrade-pip
+
+    - name: Set PYTHON_VERSION environment variable
+      run: |
+        PATCH_VERSION=$(echo "${{ matrix.python-version }}" | awk -F. '{print $3}')
+        echo "PYTHON_VERSION=311${PATCH_VERSION}" >> $GITHUB_ENV
+
     - name: Decrypt configs
       run: make decrypt security_key=${{ secrets.SECURITY_KEY }}
     
-    - name: Run test suite
-      run: tox r -e py${{ matrix.py }}
+    - name: Build package
+      run: make tox PYTHON_VERSION=$PYTHON_VERSION
       env:
-        CI_RUN: "yes"
-        DIFF_AGAINST: HEAD
+        PYTHON_VERSION: ${{ env.PYTHON_VERSION }}
+
+    - name: Clean up
+      run: make clean
   
   notify-app-to-release-to-prod:
     runs-on: ubuntu-latest
     name: Notify app repo to release latest changes to prod
-    needs: build-python-and-test
+    needs: build-uaf
     if: github.event_name == 'repository_dispatch' && github.event.action == 'deployment-completed-event'
     strategy:
       matrix:
         repos: [suneel944/simple_event_dispatch_micro]
     steps:
       - name: Dispatch event on ${{ matrix.repos }}
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with: 
           token: ${{ secrets.REPO_ACCESS_TOKEN_TO_TRIGGER_PROD_RELEASE_EVENTS }}
           repository: ${{ matrix.repos }}

@@ -1,6 +1,8 @@
 from typing import Any
 
-from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_android import AbstractAndroid
+from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_android import (
+    AbstractAndroid,
+)
 
 
 class ConcreteAndroidDriver(AbstractAndroid):
