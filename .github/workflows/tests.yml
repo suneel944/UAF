@@ -35,7 +35,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y make
-        pip install build pre-commit tox tox-gh-actions
+        pip install build pre-commit tox tox-gh-actions cryptography
 
     - name: Upgrade pip
       run: make upgrade-pip
