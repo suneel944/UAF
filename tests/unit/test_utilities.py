@@ -48,4 +48,6 @@ def test_mongo_db_duplicate_database_creation():
         rand_choice = random.choice(db_list)
         with raises(ValueError) as exc_info:
             mongo_client.create_database(rand_choice)
-        assert str(exc_info.value).__contains__(f"Database '{rand_choice}' already exists!")
+        assert str(exc_info.value).__contains__(
+            f"Database '{rand_choice}' already exists!"
+        )

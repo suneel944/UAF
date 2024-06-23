@@ -9,12 +9,16 @@ if __name__ == "__main__":
         choices=["encrypt", "decrypt", "generate_key"],
         help="choose either encrypt/decrypt or generate_key as mode",
     )
-    parser.add_argument("--key", help="secret key to either encrypt/decrypt sensitive file")
+    parser.add_argument(
+        "--key", help="secret key to either encrypt/decrypt sensitive file"
+    )
     parser.add_argument("--data_file", help="Data file to be encrypted/decrypted")
     args = parser.parse_args()
 
     if not args.mode:
-        parser.error("Please provide a mode to proceed further. See help for further infomation")
+        parser.error(
+            "Please provide a mode to proceed further. See help for further infomation"
+        )
 
     if args.mode in ["encrypt", "decrypt"]:
         if not args.data_file:

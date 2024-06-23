@@ -17,7 +17,7 @@ class AbstractWebDriver(ABC):
         pass
 
     @abstractmethod
-    def get_web_driver(self, *, options: Optional[dict[str, Any]] = None):
+    def get_web_driver(self, *, options: dict[str, Any] | None = None):
         """Abstract skeleton method for fetching user specific web driver
 
         Args:

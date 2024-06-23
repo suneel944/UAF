@@ -8,7 +8,7 @@ class AbstractMsedge(ABC):
     """Distinct msedge web base interface"""
 
     @abstractmethod
-    def get_web_driver(self, *, options: Optional[MsEdgeOptions] = None):
+    def get_web_driver(self, *, options: MsEdgeOptions | None = None):
         """Abstract skeleton method for fetching msedge driver
 
         Args:

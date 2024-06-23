@@ -28,7 +28,7 @@ config = YamlParser(FilePaths.TEST_CONFIG_DEV)
     ],
     indirect=True,
 )
-def test_mobile_web_amazon_product_search(mobile_driver):
+def test_mobile_web_amazon_product_search(mobile_driver):  # noqa
     home_page = HomePage(mobile_driver)
     product_page = ProductPage(mobile_driver)
     home_page.go_to(

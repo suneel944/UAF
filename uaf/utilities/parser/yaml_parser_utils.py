@@ -15,7 +15,7 @@ class YamlParser:
             relativeFilepathWithExtension (FilePaths): relative filepath of the yaml document
         """
         self.filePath = os.path.join(os.getcwd(), relativeFilepathWithExtension.value)
-        with open(self.filePath, "r") as f:
+        with open(self.filePath) as f:
             self.config = yaml.safe_load(f)
 
     def get_section(self, section):
@@ -33,7 +33,7 @@ class YamlParser:
         if section in self.config:
             return self.config[section]
         else:
-            raise ValueError("Selected {} section is invalid/doesn't exist!".format(section))
+            raise ValueError(f"Selected {section} section is invalid/doesn't exist!")
 
     def get_value(self, section, key):
         """Fetches specified key value from a specified section
@@ -51,7 +51,9 @@ class YamlParser:
         if section in self.config and key in self.config[section]:
             return self.config[section][key]
         else:
-            raise ValueError("Selected {}-{} section-key pair is invalid/doesn't exist!".format(section, key))
+            raise ValueError(
+                f"Selected {section}-{key} section-key pair is invalid/doesn't exist!"
+            )
 
     def set_value(self, section, key, value):
         """Set specified value in specified section's key

@@ -11,7 +11,9 @@ from uaf.enums.mobile_os import MobileOs
 from uaf.utilities.ui.swipe.swipe_utils import SwipeUtils
 
 
-@mark.skip(reason="require infrastructure to support to run this test case and is resource intensive")
+@mark.skip(
+    reason="require infrastructure to support to run this test case and is resource intensive"
+)
 @mark.unit_test
 @mark.parametrize(
     "mobile_driver",
@@ -26,8 +28,8 @@ from uaf.utilities.ui.swipe.swipe_utils import SwipeUtils
     ],
     indirect=True,
 )
-def test_appium_swipe_utils(mobile_driver):
-    swipe = SwipeUtils(mobile_driver)
+def test_appium_swipe_utils(mobile_driver):  # noqa
+    swipe = SwipeUtils(mobile_driver)  # noqa
     mobile_driver.close()
     mobile_driver.switch_to.context("NATIVE_APP")
     swipe.long_swipe(Direction.DOWN)

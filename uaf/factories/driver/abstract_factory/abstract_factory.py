@@ -20,7 +20,7 @@ class AbstractWebDriverFactory(metaclass=ABCMeta):
         self,
         *,
         browser_make: WebBrowserMake,
-        options: Optional[dict[str, Any]] = None,
+        options: dict[str, Any] | None = None,
     ):
         """Abstract method skeleton for fetching web browser
 

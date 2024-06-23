@@ -34,7 +34,9 @@ def add_new_devices_to_list():
     """Adds newly connected devices to the device_stats collection with status available"""
     all_devices = [
         __device_list["device_id"]
-        for __device_list in mongo_client.find_many(config.get_value("mongodb", "device_stat_collection"))
+        for __device_list in mongo_client.find_many(
+            config.get_value("mongodb", "device_stat_collection")
+        )
     ]
     from platform import system
 
@@ -43,7 +45,9 @@ def add_new_devices_to_list():
             MobileDeviceEnvironmentType.PHYSICAL
         )
         unique_ios_physical_devices_list = [
-            device for device in connected_ios_physical_devices_list if device not in all_devices
+            device
+            for device in connected_ios_physical_devices_list
+            if device not in all_devices
         ]
         if unique_ios_physical_devices_list:
             mongo_client.insert_many(
@@ -58,11 +62,15 @@ def add_new_devices_to_list():
                     for x in unique_ios_physical_devices_list
                 ],
             )
-    connected_android_physical_devices_list = CoreUtils.fetch_connected_android_devices_ids(
-        MobileDeviceEnvironmentType.PHYSICAL
+    connected_android_physical_devices_list = (
+        CoreUtils.fetch_connected_android_devices_ids(
+            MobileDeviceEnvironmentType.PHYSICAL
+        )
     )
     unique_android_physical_devices_list = [
-        device for device in connected_android_physical_devices_list if device not in all_devices
+        device
+        for device in connected_android_physical_devices_list
+        if device not in all_devices
     ]
     if unique_android_physical_devices_list:
         mongo_client.insert_many(
@@ -98,10 +106,18 @@ def reserve_device(mobile_os: str):
         {"status": DeviceStatus.AVAILABLE.value},
     )
     if not available_devices:
-        raise ValueError(f"Failed to start any device for {mobile_os} mobile os as availability is 0!!")
+        raise ValueError(
+            f"Failed to start any device for {mobile_os} mobile os as availability is 0!!"
+        )
 
     # randomly choose device_id based on the mobile os
-    device_id = choice([device["device_id"] for device in available_devices if mobile_os.__eq__(device["device_os"])])
+    device_id = choice(
+        [
+            device["device_id"]
+            for device in available_devices
+            if mobile_os.__eq__(device["device_os"])
+        ]
+    )
     uuid: UUID = __get_unique_id()
     session_doc = {
         "device_id": device_id,
@@ -116,7 +132,9 @@ def reserve_device(mobile_os: str):
         {"device_id": device_id},
         device_stats_doc,
     )
-    mongo_client.insert_one(config.get_value("mongodb", "device_session_collection"), session_doc)
+    mongo_client.insert_one(
+        config.get_value("mongodb", "device_session_collection"), session_doc
+    )
     return device_id, uuid
 
 

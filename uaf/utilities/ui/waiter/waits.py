@@ -18,7 +18,9 @@ class Waits:
             driver (webdriver): webdriver instance
         """
         self.driver = driver
-        self.wait = WebDriverWait(driver, Waits.__config.get_value("waits", "max_time_out"))
+        self.wait = WebDriverWait(
+            driver, Waits.__config.get_value("waits", "max_time_out")
+        )
 
     @log
     def wait_for_element_to_be_clickable(self, by_locator):

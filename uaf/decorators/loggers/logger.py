@@ -1,50 +1,59 @@
 import time
+from typing import Any, TypeVar, cast
+from collections.abc import Callable
 from functools import wraps
-from traceback import format_exc
-from typing import Any, Callable, Optional, TypeVar
-
+from collections.abc import Callable
 import psutil
-
 from . import _logger as logger
 
-T = TypeVar("T", bound=Callable[..., Any])
+
+F = TypeVar("F", bound=Callable[..., Any])
 
 
-def log(func: Optional[T] = None, *, log_return_value: bool = True) -> Callable[[Any], Any]:
-    """Logs info and errors for any decorated function
+def stringify_argument(arg: Any) -> str:
+    """
+    Converts a function argument into a string for logging. If the argument is an object,
+    it converts the object's dictionary (__dict__) into a string. Otherwise, it uses the
+    repr() function to get a string representation of the argument.
 
     Args:
-        func (Optional[T], optional): decorating function. Defaults to None.
-        log_return_value (bool, optional): condition to decide whether to print return value or not. Defaults to True.
+        arg (Any): The argument to convert to a string.
 
     Returns:
-        Callable[[Any], Any]: decorated func
+        str: The string representation of the argument.
+    """
+    if hasattr(arg, "__dict__"):
+        return str(arg.__dict__)
+    else:
+        return repr(arg)
+
+
+def log(func: F) -> F:
+    """
+    Decorator that logs the parameters passed to the decorated function. Each parameter
+    is converted to a string using stringify_argument and logged before the function
+    execution.
+
+    Args:
+        func (Callable): The function to decorate.
+
+    Returns:
+        Callable: The decorated function with parameter logging.
     """
 
-    def _decorated(func: Callable[[Any], Any]) -> Callable[[Any], Any]:
-        @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
-            arg_names = func.__code__.co_varnames[: func.__code__.co_argcount]
-            arg_dict = dict(zip(arg_names, args))
-            arg_dict.update(kwargs)
-            logger.info(f"{func.__name__} called with arguments: {arg_dict}")
-            try:
-                result = func(*args, **kwargs)
-            except Exception as e:
-                logger.error(f"{func.__name__} raised an exception: {format_exc()}")
-                raise e
-            else:
-                if log_return_value:
-                    logger.info(f"{func.__name__} returned {result}")
-                return result
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        args_str = ", ".join(map(stringify_argument, args))
+        kwargs_str = ", ".join(
+            [f"{key}={stringify_argument(value)}" for key, value in kwargs.items()]
+        )
+        all_args_str = ", ".join(filter(None, [args_str, kwargs_str]))
+        logger.log_message(
+            f"Arguments provided for function {func.__name__}: {all_args_str}"
+        )
+        return func(*args, **kwargs)
 
-        return wrapper
-
-    if func is None:
-        return _decorated
-    else:
-        # provision to run custom decorator
-        return _decorated(func)
+    return cast(F, wrapper)
 
 
 def log_performance(condition=None):
@@ -88,11 +97,15 @@ def log_performance(condition=None):
                 if condition and condition(func, result):
                     cpu_percent = cpu_after - cpu_before
                     mem_usage = mem_after - mem_before
-                    logger.info(f"Function {func.__name__} took {execution_time:.2f} seconds to execute")
+                    logger.info(
+                        f"Function {func.__name__} took {execution_time:.2f} seconds to execute"
+                    )
                     logger.info(f"CPU usage: {cpu_percent:.2f}%")
                     logger.info(f"Memory usage: {mem_usage:.2f} MB")
                 else:
-                    logger.info(f"Function {func.__name__} took {execution_time:.2f} seconds to execute")
+                    logger.info(
+                        f"Function {func.__name__} took {execution_time:.2f} seconds to execute"
+                    )
                 return result
 
         return wrapper

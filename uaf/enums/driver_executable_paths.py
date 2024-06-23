@@ -27,11 +27,11 @@ class DriverExecutablePaths(Enum):
         str: driver executable path
     """
 
-    CHROME: Tuple[str, str] = ("chromedriver", ChromeDriverManager())
-    FIREFOX: Tuple[str, str] = ("geckodriver", GeckoDriverManager())
-    IE: Tuple[str, str] = ("IEDriverServer", IEDriverManager())
-    MSEDGE: Tuple[str, str] = ("msedgedriver", EdgeChromiumDriverManager())
-    OPERA: Tuple[str, str] = ("operadriver", OperaDriverManager())
+    CHROME: tuple[str, str] = ("chromedriver", ChromeDriverManager())
+    FIREFOX: tuple[str, str] = ("geckodriver", GeckoDriverManager())
+    IE: tuple[str, str] = ("IEDriverServer", IEDriverManager())
+    MSEDGE: tuple[str, str] = ("msedgedriver", EdgeChromiumDriverManager())
+    OPERA: tuple[str, str] = ("operadriver", OperaDriverManager())
 
     # defined to resolve mypy error
     driver_manager: DriverManager
