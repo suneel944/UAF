@@ -1,5 +1,3 @@
-from typing import Optional
-
 from selenium.webdriver.edge.options import Options as MsEdgeOptions
 from selenium.webdriver.edge.service import Service
 from webdriver_manager.microsoft import EdgeChromiumDriverManager

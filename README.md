@@ -5,7 +5,7 @@
 <p class="align center">
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-![Build](https://github.com/suneel944/uaf/actions/workflows/tests.yml/badge.svg)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/suneel944/uaf/tests.yml?style=flat&logo=github)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 </div>
