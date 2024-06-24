@@ -1,16 +1,30 @@
 from abc import ABC, abstractmethod
-from typing import Optional
-
 from selenium.webdriver.ie.options import Options as IeOptions
 
 
 class AbstractIE(ABC):
-    """Distinct IE web base interface"""
+    """
+    Abstract base class for defining a distinct Internet Explorer (IE) web driver interface.
+
+    This class provides a template for creating Internet Explorer web driver instances.
+    Subclasses should implement the method to fetch the IE web driver with the given capabilities.
+
+    Methods:
+        get_web_driver(options: IeOptions | None): Fetches an IE web driver instance.
+    """
 
     @abstractmethod
     def get_web_driver(self, *, options: IeOptions | None = None):
-        """Abstract skeleton method for fetching IE driver
+        """
+        Abstract method for fetching an Internet Explorer (IE) web driver instance.
+
+        This method should be implemented by subclasses to return a specific IE web driver
+        instance configured with the provided capabilities.
 
         Args:
-            caps (Optional[dict[str, Any]], optional): browser capabilities. Defaults to None.
+            options (IeOptions | None): Options object for IE capabilities, defaults to None.
+
+        Returns:
+            WebDriver: An instance of the IE web driver configured with the specified options.
         """
+        pass

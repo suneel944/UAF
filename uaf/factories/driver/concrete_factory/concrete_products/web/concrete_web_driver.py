@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from uaf.enums.browser_make import WebBrowserMake
 from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_web_driver import (

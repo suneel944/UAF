@@ -1,5 +1,3 @@
-from typing import Optional
-
 from selenium.webdriver.ie.options import Options as IeOptions
 from selenium.webdriver.ie.service import Service
 from webdriver_manager.microsoft import IEDriverManager

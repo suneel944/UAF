@@ -19,10 +19,22 @@ from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
 class ConcreteMobileDriver(AbstractMobile):
     """
-    Concrete mobile browser factory produce a family of web browsers that belong to
-    web variant. The factory gurantees that resulting web browsers are compaitible.
-    Note that signature of the concrete mobile browser factory's methods return an abstract
-    web browser, while inside the method a concrete product is instantiated.
+    Concrete mobile driver factory that produces a family of mobile drivers.
+
+    The factory ensures that the resulting mobile drivers are compatible.
+    Note that the signature of the concrete mobile driver factory's methods return an abstract
+    mobile driver, while inside the method a concrete product is instantiated.
+
+    Attributes:
+        os (MobileOs): The mobile operating system (iOS or Android).
+        testExecMode (TestExecutionMode): The test execution mode (Local or Remote).
+        testEnv (TestEnvironments): The test environment (Development, QA, Production, etc.).
+
+    Methods:
+        __init__(os: MobileOs, test_execution_mode: TestExecutionMode, test_environment: TestEnvironments):
+            Initializes the ConcreteMobileDriver with the given OS, execution mode, and environment.
+        get_mobile_driver(capabilities: dict[str, Any]):
+            Fetches a mobile driver instance configured with the specified capabilities.
     """
 
     def __init__(
@@ -32,25 +44,45 @@ class ConcreteMobileDriver(AbstractMobile):
         test_execution_mode: TestExecutionMode,
         test_environment: TestEnvironments,
     ) -> None:
-        """Concrete implementation of mobile driver instance creation
+        """
+        Initializes a ConcreteMobileDriver instance.
 
         Args:
-            os (MobileOs): mobile os enum
-            test_execution_mode (TestExecutionMode): test execution mode enum
-            test_environment (TestEnvironments): test environments enum
+            os (MobileOs): The mobile operating system (iOS or Android).
+            test_execution_mode (TestExecutionMode): The test execution mode (Local or Remote).
+            test_environment (TestEnvironments): The test environment (Development, QA, Production, etc.).
         """
         self.testEnv = test_environment
         self.os = os
         self.testExecMode = test_execution_mode
 
     def get_mobile_driver(self, *, capabilities: dict[str, Any]):
-        """Concrete implementation of fetching mobile driver
+        """
+        Fetches a mobile driver instance configured with the specified capabilities.
+
+        This method creates and returns a WebDriver instance for mobile devices
+        (either iOS or Android) configured with the provided capabilities. It also
+        launches the Appium service and waits for it to be ready.
 
         Args:
-            capabilities (dict[str, Any]): mobile capabilities
+            capabilities (dict[str, Any]): Dictionary of mobile driver capabilities.
 
         Returns:
-            tuple: (mobile driver instance, appium port)
+            tuple: A tuple containing the mobile driver instance and the Appium port.
+
+        Example:
+            capabilities = {
+                "platformName": "iOS",
+                "platformVersion": "14.0",
+                "deviceName": "iPhone Simulator",
+                "app": "/path/to/your/app.app"
+            }
+
+            driver, port = ConcreteMobileDriver(
+                os=MobileOs.IOS,
+                test_execution_mode=TestExecutionMode.LOCAL,
+                test_environment=TestEnvironments.DEV
+            ).get_mobile_driver(capabilities=capabilities)
         """
         common_config = YamlParser(FilePaths.COMMON)
         # launch appium service
