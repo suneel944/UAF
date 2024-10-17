@@ -52,29 +52,29 @@ There are two ways in which the framework can be utilised:
     - Install [Pre-commit](https://pypi.org/project/pre-commit/)
     - Install IDE of your choice, (recommended: [VSCode](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/))
 - **Prep project:**
-    - There is an inbuilt device farming capability and for this we need to execute below command
-        - The below command invokes two dashboards and two databases to manage device farming activities
-            - RabbitMQ 
-                - username: admin
-                - password: admin123
-                - [url](http://localhost:15672/)
-            - Mongo express
-                - [url](http://localhost:8081/)
+    - There is an inbuilt device farming capability, and for this, we need to execute the below command:
+        - The command invokes two dashboards and two databases to manage device farming activities:
+            - **RabbitMQ** 
+                - Username: `admin`
+                - Password: `admin123`
+                - [URL](http://localhost:15672/)
+            - **Mongo Express**
+                - [URL](http://localhost:8081/)
+                - Initial login credentials:
+                    - Username: `admin`
+                    - Password: `pass`
     ```bash
-    sudo docker compose -f docker-compose-device-farm.yml up --build
-    -or-
-    sudo docker compose -f docker-compose-device-farm.yml up -d --build
+    sudo docker compose -f docker-compose up --build
+    # or
+    sudo docker compose -f docker-compose up -d --build
     ```
-    - Once the docker containers are up, next thing is to prep the mongodb and add few data so that it starts working
+    - Once the Docker containers are up, the next step is to prep MongoDB and add some data so that it starts working:
         - Create a database called **appium_device_stats**
-        - In the database which has been created, create two collections
-            - device_stats
-                - Holds data pertaining to device availability
-            - device_sessions
-                - Holds data pertaining to device sessions
-    - Now the MongoDb and RabbitMQ are configured, let's head further steps which lead us to completion
-    - Ensure you have the following installed before diving into the action:
+        - In the created database, create two collections:
+            - **device_stats**: Holds data pertaining to device availability
+            - **device_sessions**: Holds data pertaining to device sessions
 
+    - Ensure you have the following installed before diving into the action.
 
 ## Getting Started
 
@@ -117,6 +117,20 @@ For [PyCharm](https://www.jetbrains.com/pycharm/), refer to their documentation 
         sudo docker compose -f  docker-compose-report.yml up -d --build
         ```
     Now the project setup is done, lets proceed to next step
+
+## Invoke Celery
+
+- Invoke Celery to check if everything is working fine:
+      ```bash
+      celery -A uaf.device_farming.device_tasks worker -B -E -O fair --loglevel=INFO
+      ```
+    - **Celery**: The command-line tool for managing Celery tasks.
+        - **-A uaf.device_farming.device_tasks**: The app instance to use, where `uaf.device_farming.device_tasks` is the Python module containing the Celery application.
+        - **worker**: Starts a worker process that will process tasks.
+        - **-B**: Enables the Celery beat scheduler, allowing the worker to manage periodic tasks defined in the Celery configuration.
+        - **-E**: Enables event monitoring, allowing you to track tasks in real-time, useful for monitoring and debugging.
+        - **-O fair**: Optimizes the worker to schedule tasks in a "fair" manner, meaning each worker gets an equal number of tasks over time.
+        - **--loglevel=INFO**: Sets the log level to INFO, providing general information about the worker's activity.
 
 ## Encrypt/decrypt sensitive information
 - Currently the project hosts sensitive data, which is encrypted using in house encryption using cryptography lib and since the file is encrypted and will remain encrypted indefinetly. Below is the template that needs to be followed for the same, at least initially to make the scripts and the project work. Later it can be modified according to the taste of individuals/ teams

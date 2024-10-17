@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  rabbitmq:
+    extends:
+      file: ./infra.yml
+      service: rabbitmq
+
+  mongodb:
+    extends:
+      file: ./infra.yml
+      service: mongodb
+
+  mongo-express:
+    extends:
+      file: ./infra.yml
+      service: mongo-express
+
+  allure:
+    extends:
+      file: ./infra.yml
+      service: allure
+
+  allure-ui:
+    extends:
+      file: ./infra.yml
+      service: allure-ui
+
+volumes:
+  db_data:
