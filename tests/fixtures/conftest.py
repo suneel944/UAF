@@ -1,5 +1,6 @@
 import pytest
 
+from typing import Any
 from uaf.decorators.loggers.logger import log
 from appium.webdriver.webdriver import WebDriver
 from tests.test_data.appium.capabilities import Capabilities
@@ -21,6 +22,12 @@ from uaf.utilities.ui.appium_core.appium_core_utils import CoreUtils
 
 @pytest.hookimpl
 def pytest_addoption(parser):
+    """
+    Adds a command-line option for specifying the test environment.
+
+    Args:
+        parser: The pytest parser for adding custom command-line options.
+    """
     parser.addoption(
         "--env", action="store", default="dev", help="Specify the test environment"
     )
@@ -31,19 +38,20 @@ def __fetch_required_arg_list(
     arg_mobile_app_type: MobileAppType,
     arg_mobile_os: MobileOs,
     arg_mobile_app_status: MobileAppStatus,
-):
-    """Fetch required argument list of capabilities mandated for given mobile app type, mobile os, and app status.
+) -> list[str]:
+    """
+    Fetches the list of required arguments based on mobile app type, OS, and status.
 
     Args:
-        arg_mobile_app_type (MobileAppType): type of mobile app
-        arg_mobile_os (MobileOs): type of mobile os
-        arg_mobile_app_status (MobileAppStatus): status of the mobile app (existing or requires installation)
+        arg_mobile_app_type (MobileAppType): The type of mobile app (e.g., HYBRID, NATIVE, WEB).
+        arg_mobile_os (MobileOs): The mobile OS (e.g., ANDROID, IOS).
+        arg_mobile_app_status (MobileAppStatus): The status of the mobile app (e.g., EXISTING or REQUIRES INSTALLATION).
 
     Raises:
-        ValueError: if invalid mobile app type is provided
+        ValueError: If an invalid mobile app type is provided.
 
     Returns:
-        list[str]: list of required mobile app capabilities
+        list[str]: A list of required mobile app capabilities.
     """
     required_list = [
         "arg_mobile_os",
@@ -58,6 +66,7 @@ def __fetch_required_arg_list(
     else:
         required_list.append("arg_full_reset")
         required_list.append("arg_mobile_app_path")
+
     match arg_mobile_app_type:
         case MobileAppType.HYBRID:
             match arg_mobile_os:
@@ -100,24 +109,26 @@ def __fetch_required_arg_list(
 @log
 def __check_required_keys_values_exist(
     arg_data: pytest.FixtureRequest, arg_required_key_list: list[str]
-):
-    """Checks if required key value dictionary is passed from test layer to fixture
+) -> None:
+    """
+    Ensures that the required keys and values are provided in the test request.
 
     Args:
-        arg_data (FixtureRequest): test arguments
-        arg_required_key_list (list[str]): list of required arguments to be passed from test layer
+        arg_data (FixtureRequest): The test request containing the arguments.
+        arg_required_key_list (list[str]): The list of required argument keys.
 
     Raises:
-        ValueError: if missing required argument key in dict/if missing required argument value in provided dict
+        ValueError: If required keys or their values are missing.
     """
-    # key check
+    # Check if all required keys are present
     if not all(key in arg_data.param for key in arg_required_key_list):
         raise ValueError(f"Missing required arguments!! - {arg_required_key_list}")
-    # value check
+
+    # Check if any of the required values are None
     value_list = [arg_data.param.get(i) for i in arg_required_key_list]
     if None in value_list:
         raise ValueError(
-            f"Require argument cannot be none type!! - {arg_required_key_list}"
+            f"Required argument cannot be None type!! - {arg_required_key_list}"
         )
 
 
@@ -137,30 +148,28 @@ def __build_mobile_capabilities(
     arg_auto_accept_alerts: bool = False,
     arg_auto_grant_permission: bool = False,
     arg_mobile_bundle_id: str | None = None,
-):
-    """Generates mobile capabilities for user-specified mobile app type and mobile OS.
+) -> tuple[dict[str, Any], str, str]:
+    """
+    Builds the mobile capabilities for the given app type and OS.
 
     Args:
-        arg_mobile_os (MobileOs): mobile os in which script has to be invoked
-        arg_mobile_app_type (MobileAppType): type of mobile app in which script has to be executed
-        arg_mobile_device_environment_type (MobileDeviceEnvironmentType): type of mobile device environment in which script has to be executed
-        arg_automation_name (AppiumAutomationName): appium automation name
-        arg_mobile_app_path (Optional[str], optional): path of mobile app where it is stored. Defaults to None.
-        arg_mobile_web_browser (Optional[MobileWebBrowserMake], optional): mobile web browser in which automation has to be executed. Defaults to None.
-        arg_mobile_app_activity (Optional[str], optional): mobile app activity. Defaults to None.
-        arg_mobile_app_package (Optional[str], optional): mobile app package. Defaults to None.
-        arg_no_reset (bool): indicates if the app should not be reset between sessions. Defaults to False.
-        arg_full_reset (bool): indicates if the app should be fully reset between sessions. Defaults to False.
-        arg_print_page_source_on_find_failure (bool): flag to print the page source on find failure. Defaults to True.
-        arg_auto_accept_alerts (bool): whether to auto accept alerts in iOS apps. Defaults to False.
-        arg_auto_grant_permission (bool): whether to auto grant permissions in Android apps. Defaults to False.
-        arg_mobile_bundle_id (Optional[str]): the bundle ID for iOS apps. Defaults to None.
-
-    Raises:
-        ValueError: if invalid mobile app type is provided
+        arg_mobile_os (MobileOs): The mobile OS to use (e.g., ANDROID, IOS).
+        arg_mobile_app_type (MobileAppType): The type of mobile app (e.g., HYBRID, NATIVE, WEB).
+        arg_mobile_device_environment_type (MobileDeviceEnvironmentType): The environment type for the device.
+        arg_automation_name (AppiumAutomationName): The automation framework name (e.g., Appium).
+        arg_mobile_app_path (Optional[str]): The path to the mobile app, if applicable. Defaults to None.
+        arg_mobile_web_browser (Optional[MobileWebBrowserMake]): The browser to use for web apps, if applicable. Defaults to None.
+        arg_mobile_app_activity (Optional[str]): The app activity (Android-specific). Defaults to None.
+        arg_mobile_app_package (Optional[str]): The app package (Android-specific). Defaults to None.
+        arg_no_reset (bool): Whether to avoid resetting the app between sessions. Defaults to False.
+        arg_full_reset (bool): Whether to perform a full reset of the app. Defaults to False.
+        arg_print_page_source_on_find_failure (bool): Whether to print the page source on find failure. Defaults to True.
+        arg_auto_accept_alerts (bool): Whether to auto-accept alerts (iOS-specific). Defaults to False.
+        arg_auto_grant_permission (bool): Whether to auto-grant permissions (Android-specific). Defaults to False.
+        arg_mobile_bundle_id (Optional[str]): The bundle ID for iOS apps. Defaults to None.
 
     Returns:
-        dict[str, Any]: mobile app capabilities dictionary
+        tuple[dict[str, Any], str, str]: The built capabilities dictionary, device ID, and session ID.
     """
     caps = Capabilities.get_instance()
     device_id, session_id = reserve_device.delay(arg_mobile_os.value).get(timeout=10)
@@ -173,6 +182,7 @@ def __build_mobile_capabilities(
         "full_reset": arg_full_reset,
         "print_page_source_on_find_failure": arg_print_page_source_on_find_failure,
     }
+
     match arg_mobile_app_type:
         case MobileAppType.HYBRID:
             match arg_mobile_os:
@@ -222,7 +232,6 @@ def __build_mobile_capabilities(
                 browser_name=arg_mobile_web_browser,
             )
             return caps.get_mobile_web_browser_capabilities(), device_id, session_id
-
         case _:
             raise ValueError("Invalid mobile app type!")
 
@@ -230,13 +239,14 @@ def __build_mobile_capabilities(
 @log
 @pytest.fixture(scope="function")
 def mobile_driver(request: pytest.FixtureRequest):
-    """Mobile driver fixture, responsible for yielding user requested mobile driver instance and clean up activity.
+    """
+    Mobile driver fixture that yields the requested mobile driver instance.
 
     Args:
-        request (FixtureRequest): test arguments
+        request (FixtureRequest): The pytest fixture request containing test arguments.
 
     Yields:
-        AppiumDriver: returns user requested mobile driver instance
+        WebDriver: The mobile driver instance.
     """
     __check_required_keys_values_exist(
         request,
@@ -283,13 +293,14 @@ def mobile_driver(request: pytest.FixtureRequest):
 @log
 @pytest.fixture(scope="function")
 def web_driver(request: pytest.FixtureRequest):
-    """WebDriver fixture, responsible for yielding user requested web driver instance and clean up activity
+    """
+    WebDriver fixture that yields the requested web driver instance.
 
     Args:
-        request (FixtureRequest): test arguments
+        request (FixtureRequest): The pytest fixture request containing test arguments.
 
     Yields:
-        WebDriver: requested webdriver instance
+        WebDriver: The web driver instance.
     """
     driver = (ConcreteWebDriverFactory()).get_web_driver(
         browser_make=request.param.get("arg_browser_make"),
