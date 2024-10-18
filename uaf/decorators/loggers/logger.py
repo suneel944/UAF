@@ -48,9 +48,7 @@ def log(func: F) -> F:
             [f"{key}={stringify_argument(value)}" for key, value in kwargs.items()]
         )
         all_args_str = ", ".join(filter(None, [args_str, kwargs_str]))
-        logger.log_message(
-            f"Arguments provided for function {func.__name__}: {all_args_str}"
-        )
+        logger.info(f"Arguments provided for function {func.__name__}: {all_args_str}")
         return func(*args, **kwargs)
 
     return cast(F, wrapper)

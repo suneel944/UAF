@@ -64,7 +64,9 @@ run-pre-commit:
 # Clean up
 clean:
 	@echo "Cleaning up..."
-	@rm -rf .pytest_cache .tox dist build .mypy_cache *.egg-info
+	@rm -rf .pytest_cache .tox dist build .mypy_cache .ruff_cache *.egg-info
+	@find . -type d -name "allure-reports" -exec rm -rf {} +
+	@find . -type d -name "allure-results" -exec rm -rf {} +
 	@find . -type d -name "__pycache__" -exec rm -rf {} +
 	@find . -type f -name "*.pyc" -delete
 	@find . -type f -name "*.pyo" -delete
