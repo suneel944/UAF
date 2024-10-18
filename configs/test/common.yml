@@ -1,1 +1,28 @@
-gAAAAABkWrzZ1iBFQLl6bVB34lyV8sOCys9yrK9zAWJMgdq8c9bQ-2uz-XhZIAkKWq8n3sFzjKq6Jk1f83MJelj72NKirOOVefIyAJa39kyngURU0ceard6DNxrQO0zAUl7lLrF1pjXcARetie_of7-WFvM1wD1tdQUzogtDiSNOXzZc3KOM80bvaD8PO_g4Tf3O_MBTh8GzBeNazZAgb7xlRYObksOwEckwkS6LVgDOQ16yujn3_dOiAVXUwtJwiDisnYRqUWdQllblH7gjOJFGvQjnuLL2cJtGgc_9pbrciyH3Cp4GzPcFTEVE-3ss4OM3mYbzl-a8ttReQdt27r93ICndWhS-_AivGdis3556Vj0m07AmynpYmFtmLrqgOfzjs1wl5eE2QSqZ7X1PBtt5zfjXbursMND2hDXgbynWybnXwBA8RE83XYu5dEo8sNHrzjMaUmtbYvgtk_y7aFdz9nl3LAhrIeEoTKOPXwo_d8f2y3opkdmhDB2BKxReZ3q496MImpMUSLmN2ZAx9xq0FHFCzb-UA4R3DXaBdY9jxGrvDCNFIByQbSUlIeFeNk6C3EUKoIa_ufuWF6NOK0DNDoO1y6_CRouilYmQx0Dq9FpYxt_5dUVtMrp301Rj9yySzEqv_c_0Lxgi5n6TKFQf0eVIGq6Cnm2x7Mukv6EvhvbcFvWEC8An7LhOrRFY_lj5UaMkVCZpwdXZ1ms0GArPT3ZlKXRw6Vm5DfP7xx0RZy3gAmTZ_wkxhd39d5I-nI4c-Qn6Xva9F6WggbVejSW7waNkDVt2AbkLf_5O3u3jxqMjs8_aQN3aciY8tALzQe6LVeCH-t7Qt0zoQlxqt3j1iruEFrJZcGwe7qf4AK6j_8pExUJ7JAH7Eb4vms4yYQzmn6X2bMxzn0HliRHLs9Ds8mWik5UJ1B_WWYulQtysaDqFoftQByAvERisC3wQuCaG01eeeQmE_jAqwzSui0I_CUHmpzF1kB8yfLlLpE97otTvRgJiTbWLQnpvFpJthB4lN9HHB302gF8Og7JyiRw2Hswbv0ySIg==
+info:
+  name: Common
+
+ports:
+  appipum_service_min_port_band: 4723
+  appium_service_max_port_band: 4980
+
+appium:
+  appium_base_url_local: http://localhost:${port}
+  appium_base_url_remote: http://localhost:${port}
+
+celery:
+  broker_url: amqp://admin:admin123@localhost:5672
+  result_backend: rpc://admin:admin123@localhost:5672
+
+mongodb:
+  connection_string: mongodb://admin:admin123@localhost:27018/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
+  device_stat_collection: device_stats
+  device_session_collection: device_sessions
+
+chatgpt:
+  api_key: your_personal_api_key
+  engine: gpt-3.5-turbo
+  max_tokens: 1000
+  temperature: 0.7
+
+waits:
+  max_time_out: 30
