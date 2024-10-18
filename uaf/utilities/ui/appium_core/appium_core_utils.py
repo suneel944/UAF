@@ -1,4 +1,16 @@
-from . import FakerUtils, FilePaths, MobileDeviceEnvironmentType, Optional, YamlParser
+import socket
+import time
+import requests
+from . import (
+    FakerUtils,
+    FilePaths,
+    MobileDeviceEnvironmentType,
+    Optional,
+    YamlParser,
+    MobileAppType,
+    MobileOs,
+    AppiumService,
+)
 
 
 class CoreUtils:
@@ -27,79 +39,136 @@ class CoreUtils:
             return subprocess.check_output(command).decode("utf-8")
 
     @staticmethod
-    def launch_appium_service() -> int:
-        """launches appium service as per the configuration
+    def launch_appium_service(mobile_os: MobileOs, app_type: MobileAppType) -> int:
+        """Launches Appium service based on the mobile OS and app type.
+
+        Args:
+            mobile_os (MobileOs): The mobile OS type, either 'android' or 'ios'
+            app_type (MobileAppType): The app type, either 'native', 'hybrid', or 'web'
 
         Raises:
-            Exception: if unable to find port availability
+            Exception: if unable to find port availability or start Appium service
 
         Returns:
-            int: port number
+            int: Port number.
         """
-        import socket
-
         config = YamlParser(FilePaths.COMMON)
+        min_port = config.get_value("ports", "appipum_service_min_port_band")
+        max_port = config.get_value("ports", "appium_service_max_port_band")
 
-        def find_free_port():
-            for port in range(
-                config.get_value("ports", "appipum_service_min_port_band"),
-                config.get_value("ports", "appium_service_max_port_band") + 1,
-            ):
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    # if port is available, return it
-                    if s.connect_ex(("localhost", port)) != 0:
-                        return port
-            # if no free port is found, raise an exception
-            raise Exception(
-                "Unable to find a free port within the range {}-{}".format(
-                    config.get_value("ports", "appipum_service_min_port_band"),
-                    config.get_value("ports", "appium_service_max_port_band"),
-                )
-            )
+        port = CoreUtils._find_free_port(min_port, max_port)
+        CoreUtils._start_appium_service(port, mobile_os, app_type)
 
-        port: int = find_free_port()
-        CoreUtils.execute_commands(
-            [
-                "appium",
-                "-p",
-                f"{port}",
-                "--allow-insecure",
-                "chromedriver_autodownload",
-            ],
-            True,
-        )
         return port
 
     @staticmethod
-    def wait_for_appium_service_to_load(max_wait_time: int, host: str, port: int):
-        """Waits for an appium service to load for a specified amount of time
+    def _find_free_port(min_port: int, max_port: int) -> int:
+        """Finds an available port within the given range
 
         Args:
-            max_wait_time (int): maximum wait time
-            host (str): host address
-            port (int): port number
+            min_port (int): Minimum port number in the range
+            max_port (int): Maximum port number in the range
 
         Raises:
-            TimeoutError: if appium service failed to load in a specified amount of time
-        """
-        import socket
-        import time
+            Exception: If no free port is found within the range
 
+        Returns:
+            int: Available port number.
+        """
+        for port in range(min_port, max_port + 1):
+            if CoreUtils._is_port_available(port):
+                return port
+        raise Exception(
+            f"Unable to find a free port within the range {min_port}-{max_port}"
+        )
+
+    @staticmethod
+    def _is_port_available(port: int) -> bool:
+        """Checks if a given port is available
+
+        Args:
+            port (int): Port number to check
+
+        Returns:
+            bool: True if the port is available, False otherwise
+        """
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex(("localhost", port)) != 0
+
+    @staticmethod
+    def _start_appium_service(
+        port: int, mobile_os: MobileOs, app_type: MobileAppType
+    ) -> AppiumService:
+        """Starts the Appium service on the given port using the custom AppiumService class.
+
+        Args:
+            port (int): Port number on which Appium service should be started
+            mobile_os (MobileOs): The mobile OS type, either 'android' or 'ios'
+            app_type (MobileAppType): The app type, either 'native', 'hybrid', or 'web'
+
+        Returns:
+            AppiumService: The AppiumService instance for the started Appium service
+
+        Raises:
+            Exception: If the Appium service fails to start
+        """
+        appium_service = AppiumService()
+
+        # Build arguments list based on mobile OS and app type
+        args = ["--port", str(port), "--log-timestamp", "--local-timezone"]
+
+        if mobile_os == MobileOs.ANDROID:
+            args.extend(["--allow-insecure", "chromedriver_autodownload"])
+            if app_type in [MobileAppType.HYBRID, MobileAppType.WEB]:
+                args.extend(["--chromedriver-port", str(port + 1)])
+        elif mobile_os == MobileOs.IOS:
+            if app_type in [MobileAppType.HYBRID, MobileAppType.WEB]:
+                args.extend(["--webkit-debug-proxy-port", str(port + 2)])
+
+        try:
+            appium_service.start(args=args)
+            return appium_service
+        except Exception as e:
+            raise Exception(f"Failed to start Appium service: {str(e)}")
+
+    @staticmethod
+    def wait_for_appium_service_to_load(
+        max_wait_time: int, host: str, port: int
+    ) -> bool:
+        """Waits for an Appium service to load for a specified amount of time.
+
+        Args:
+            max_wait_time (int): Maximum wait time in seconds.
+            host (str): Host address.
+            port (int): Port number.
+
+        Returns:
+            bool: True if the service starts within the specified time, False otherwise.
+        """
         start_time = time.time()
-        while True:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                try:
-                    s.settimeout(max_wait_time)
-                    s.connect((host, port))
-                    break
-                except OSError:
-                    elapsed_time = time.time() - start_time
-                    if elapsed_time >= max_wait_time:
-                        raise TimeoutError(
-                            "Timed out waiting for Appium server to start"
-                        )
-                    else:
-                        time.sleep(1)
+        while not CoreUtils._is_service_running(host, port):
+            elapsed_time = time.time() - start_time
+            if elapsed_time >= max_wait_time:
+                return False
+            time.sleep(1)
+        return True
+
+    @staticmethod
+    def _is_service_running(host: str, port: int) -> bool:
+        """Checks if a service is running on the specified host and port.
+
+        Args:
+            host (str): Host address.
+            port (int): Port number.
+
+        Returns:
+            bool: True if the service is running, False otherwise.
+        """
+        try:
+            response = requests.get(f"http://{host}:{port}/status", timeout=1)
+            return response.status_code == 200
+        except requests.exceptions.RequestException:
+            return False
 
     @staticmethod
     def purge_appium_node(port: int):

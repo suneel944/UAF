@@ -1,9 +1,11 @@
 from typing import Any
 
+from appium.webdriver.webdriver import WebDriver
 from uaf.enums.file_paths import FilePaths
 from uaf.enums.mobile_os import MobileOs
 from uaf.enums.test_environments import TestEnvironments
 from uaf.enums.test_execution_mode import TestExecutionMode
+from uaf.enums.mobile_app_type import MobileAppType
 from uaf.factories.driver.abstract_factory.abstract_products.abstract_mobie.abstract_mobile import (
     AbstractMobile,
 )
@@ -29,6 +31,7 @@ class ConcreteMobileDriver(AbstractMobile):
         self,
         *,
         os: MobileOs,
+        app_type: MobileAppType,
         test_execution_mode: TestExecutionMode,
         test_environment: TestEnvironments,
     ) -> None:
@@ -36,14 +39,18 @@ class ConcreteMobileDriver(AbstractMobile):
 
         Args:
             os (MobileOs): mobile os enum
+            app_type (MobileAppType): The type of mobile application
             test_execution_mode (TestExecutionMode): test execution mode enum
             test_environment (TestEnvironments): test environments enum
         """
         self.testEnv = test_environment
         self.os = os
+        self.app_type = app_type
         self.testExecMode = test_execution_mode
 
-    def get_mobile_driver(self, *, capabilities: dict[str, Any]):
+    def get_mobile_driver(
+        self, *, capabilities: dict[str, Any]
+    ) -> tuple[WebDriver, int]:
         """Concrete implementation of fetching mobile driver
 
         Args:
@@ -54,7 +61,7 @@ class ConcreteMobileDriver(AbstractMobile):
         """
         common_config = YamlParser(FilePaths.COMMON)
         # launch appium service
-        port = CoreUtils.launch_appium_service()
+        port = CoreUtils.launch_appium_service(self.os, self.app_type)
         # return requested mobile driver
         remote_url = (
             common_config.get_value(

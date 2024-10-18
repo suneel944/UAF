@@ -4,8 +4,10 @@ from . import (
     ConcreteWebDriver,
     MobileOs,
     Optional,
+    WebDriver,
     TestEnvironments,
     TestExecutionMode,
+    MobileAppType,
     WebBrowserMake,
     abstract_factory,
 )
@@ -18,20 +20,26 @@ class ConcreteMobileDriverFactory(abstract_factory.AbstractMobileDriverFactory):
         self,
         *,
         os: MobileOs,
+        app_type: MobileAppType,
         test_execution_mode: TestExecutionMode,
         test_environment: TestEnvironments,
         capabilities: dict[str, Any],
-    ):
+    ) -> tuple[WebDriver, int]:
         """Concrete implementation of fetching mobile driver
 
         Args:
             os (MobileOs): mobile os enum
+            app_type (MobileAppType): mobile app type enum  # Added missing arg description
             test_execution_mode (TestExecutionMode): test execution mode enum
             test_environment (TestEnvironments): test environment enum
-            capabilities (dict[str, Any]): mobile capabilties
+            capabilities (dict[str, Any]): mobile capabilities
+
+        Returns:
+            ConcreteMobileDriver: An instance of the mobile driver.
         """
         return ConcreteMobileDriver(
             os=os,
+            app_type=app_type,
             test_execution_mode=test_execution_mode,
             test_environment=test_environment,
         ).get_mobile_driver(
