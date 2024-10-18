@@ -151,9 +151,9 @@ There are two ways in which the framework can be utilised:
 
 - Invoke Celery to check if everything is working fine:
       
-      ```bash
-      celery -A uaf.device_farming.device_tasks worker -B -E -O fair --loglevel=INFO
-      ```
+    ```bash
+    celery -A uaf.device_farming.device_tasks worker -B -E -O fair --loglevel=INFO
+    ```
 
     - **Celery**: The command-line tool for managing Celery tasks.
         - **-A uaf.device_farming.device_tasks**: The app instance to use, where `uaf.device_farming.device_tasks` is the Python module containing the Celery application.
