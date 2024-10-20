@@ -1,20 +1,23 @@
 import os
-
 import yaml  # type: ignore
-
 from uaf.enums.file_paths import FilePaths
 
 
 class YamlParser:
     """Utility class for parsing yaml documents"""
 
-    def __init__(self, relativeFilepathWithExtension: FilePaths):
+    def __init__(self, relativeFilepathWithExtension: FilePaths | str):
         """Constructor
 
         Args:
-            relativeFilepathWithExtension (FilePaths): relative filepath of the yaml document
+            relativeFilepathWithExtension (FilePaths | str): relative filepath of the yaml document
         """
-        self.filePath = os.path.join(os.getcwd(), relativeFilepathWithExtension.value)
+        if isinstance(relativeFilepathWithExtension, FilePaths):
+            self.filePath = os.path.join(
+                os.getcwd(), relativeFilepathWithExtension.value
+            )
+        else:
+            self.filePath = relativeFilepathWithExtension
         with open(self.filePath) as f:
             self.config = yaml.safe_load(f)
 
