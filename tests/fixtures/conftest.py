@@ -11,8 +11,8 @@ from uaf.enums.mobile_app_type import MobileAppType
 from uaf.enums.mobile_app_status import MobileAppStatus
 from uaf.enums.mobile_device_environment_type import MobileDeviceEnvironmentType
 from uaf.enums.mobile_os import MobileOs
-from uaf.enums.test_environments import TestEnvironments
-from uaf.enums.test_execution_mode import TestExecutionMode
+from uaf.enums.environments import Environments
+from uaf.enums.execution_mode import ExecutionMode
 from uaf.factories.driver.concrete_factory.concrete_factory import (
     ConcreteMobileDriverFactory,
     ConcreteWebDriverFactory,
@@ -280,8 +280,8 @@ def mobile_driver(request: pytest.FixtureRequest):
     data: tuple[WebDriver, int] = (ConcreteMobileDriverFactory()).get_mobile_driver(
         os=request.param.get("arg_mobile_os"),
         app_type=request.param.get("arg_mobile_app_type"),
-        test_execution_mode=TestExecutionMode.LOCAL,
-        test_environment=TestEnvironments.DEVELOPMENT,
+        execution_mode=ExecutionMode.LOCAL,
+        environment=Environments.DEVELOPMENT,
         capabilities=capabilities,
     )
     yield data[0]
