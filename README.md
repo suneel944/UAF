@@ -195,7 +195,7 @@ There are two ways in which the framework can be utilised:
         result_backend: rpc://<username>>:<password>@localhost:5672
 
     mongodb:
-        connection_string: mongodb://<username>>:<password>@localhost:27018/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
+        connection_string: mongodb://<username>>:<password>@localhost:27017/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
         device_stat_collection: device_stats
         device_session_collection: device_sessions
 
