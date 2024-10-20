@@ -60,7 +60,7 @@ class Waits:
 
     @log
     def __page_load_js_script(self):
-        """page load js script to detect page load completion
+        """Page load JavaScript script to detect page load completion
 
         Returns:
             bool: True/False
@@ -72,11 +72,11 @@ class Waits:
         """Waits for custom condition
 
         Args:
-            func (lambda): lamda func
+            func (lambda): lambda func
         """
         self.wait.until(func)
 
     @log
     def wait_for_page_load(self):
-        """Wait for page load using javascript"""
-        self.wait_for_until(lambda x: self.__page_load_js_script)  # type: ignore
+        """Wait for page load using JavaScript"""
+        self.wait_for_until(lambda driver: self.__page_load_js_script())

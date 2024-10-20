@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from uaf.enums.browser_make import WebBrowserMake
 from uaf.factories.driver.abstract_factory.abstract_products.abstract_web.abstract_web_driver import (
@@ -26,33 +26,36 @@ from uaf.factories.driver.concrete_factory.concrete_products.web.concrete_msedge
 
 class ConcreteWebDriver(AbstractWebDriver):
     """
-    Concrete web browser factory produce a family of web browsers that belong to
-    web variant. The factory gurantees that resulting web browsers are compaitible.
-    Note that signature of the concrete web browser factory's methods return an abstract
-    web browser, while inside the method a concrete product is instantiated.
+    Concrete implementation class for creating web browser drivers.
+
+    This factory class produces web drivers for various web browsers, ensuring that the correct driver is instantiated
+    based on the specified browser type. It supports different browser variants (e.g., Chrome, Brave, Firefox, etc.)
+    and guarantees that the resulting web driver is compatible with the user's requested browser.
+
+    The `get_web_driver` method returns an abstract web browser interface, while internally, it instantiates a
+    concrete product based on the user's choice.
     """
 
     def __init__(self, *, browser_make: WebBrowserMake):
-        """Concrete implementation of web driver instance creation
+        """Initializes the ConcreteWebDriver with the specified browser type.
 
         Args:
-            browser_make (WebBrowserMake): web browser make enum
+            browser_make (WebBrowserMake): Enum specifying the web browser type (e.g., Chrome, Firefox, Brave).
         """
         self.browser_make = browser_make
 
     def get_web_driver(self, *, options: dict[str, Any] | None = None):
-        """Concrete method implementation of fetching user specific web browser
+        """Fetches and returns the web driver instance for the specified browser type.
 
         Args:
-            options (Optional[dict[str, Any]], optional): web browser capabilities. Defaults to None.
+            options (dict[str, Any] | None, optional): Browser capabilities or options. Defaults to None.
 
         Raises:
-            ValueError: if invalid browser type specified
+            ValueError: If an invalid browser type is specified.
 
         Returns:
-            WebDriver: webdriver instance
+            WebDriver: A web driver instance for the specified browser.
         """
-
         match self.browser_make.value:
             case WebBrowserMake.BRAVE.value:
                 return ConcreteBraveDriver().get_web_driver(options=options)
@@ -67,4 +70,4 @@ class ConcreteWebDriver(AbstractWebDriver):
             case WebBrowserMake.FIREFOX.value:
                 return ConcreteFirefoxDriver().get_web_driver(options=options)
             case _:
-                raise ValueError("invalid browser type specified")
+                raise ValueError("Invalid browser type specified.")

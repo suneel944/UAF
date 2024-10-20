@@ -1,5 +1,3 @@
-from typing import Optional
-
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
@@ -12,20 +10,23 @@ from . import webdriver
 
 
 class ConcreteFirefoxDriver(AbstractFirefox):
-    """Concrete implementation class of firefox web driver"""
+    """Concrete implementation class for creating a Firefox web driver."""
 
     def get_web_driver(self, *, options: FirefoxOptions | None = None):
-        """Concrete implementation method of fetching firefox web driver
+        """Fetches and returns a Firefox browser web driver instance.
 
         Args:
-            capabilities (dict[str, Any]): firefox browser capabilities
+            options (FirefoxOptions | None, optional): The Firefox options to configure the web driver.
+                                                       Defaults to None. If not provided, default options
+                                                       (maximized window) will be applied.
 
         Returns:
-            WebDriver: firefox webdriver instance
+            WebDriver: A Firefox WebDriver instance configured with the provided or default options.
         """
         if options is None:
             options = FirefoxOptions()
             options.add_argument("--start-maximized")
+
         return webdriver.Firefox(
             options=options,
             service=Service(executable_path=GeckoDriverManager().install()),

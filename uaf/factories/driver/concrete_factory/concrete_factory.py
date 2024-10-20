@@ -4,46 +4,62 @@ from . import (
     ConcreteWebDriver,
     MobileOs,
     Optional,
-    TestEnvironments,
-    TestExecutionMode,
+    WebDriver,
+    Environments,
+    ExecutionMode,
+    MobileAppType,
     WebBrowserMake,
     abstract_factory,
 )
 
 
 class ConcreteMobileDriverFactory(abstract_factory.AbstractMobileDriverFactory):
-    """Concrete implementation of mobile driver factory"""
+    """Concrete implementation of a mobile driver factory.
+
+    This class implements the method to fetch or create mobile driver instances based on
+    the mobile OS, app type, execution mode, environment, and capabilities provided.
+    """
 
     def get_mobile_driver(
         self,
         *,
         os: MobileOs,
-        test_execution_mode: TestExecutionMode,
-        test_environment: TestEnvironments,
+        app_type: MobileAppType,
+        execution_mode: ExecutionMode,
+        environment: Environments,
         capabilities: dict[str, Any],
-    ):
-        """Concrete implementation of fetching mobile driver
+    ) -> tuple[WebDriver, int]:
+        """Fetch or create a mobile driver instance.
 
         Args:
-            os (MobileOs): mobile os enum
-            test_execution_mode (TestExecutionMode): test execution mode enum
-            test_environment (TestEnvironments): test environment enum
-            capabilities (dict[str, Any]): mobile capabilties
+            os (MobileOs): The mobile operating system (e.g., Android, iOS).
+            app_type (MobileAppType): The type of mobile application (e.g., native, web, hybrid).
+            execution_mode (ExecutionMode): The test execution mode (e.g., local, remote).
+            environment (Environments): The environment where the mobile application will run (e.g., staging, production).
+            capabilities (dict[str, Any]): A dictionary of desired capabilities for configuring the mobile driver.
+
+        Returns:
+            tuple[WebDriver, int]: A tuple containing the mobile driver instance and a session identifier.
         """
         return ConcreteMobileDriver(
             os=os,
-            test_execution_mode=test_execution_mode,
-            test_environment=test_environment,
+            app_type=app_type,
+            execution_mode=execution_mode,
+            environment=environment,
         ).get_mobile_driver(
             capabilities=capabilities
         )  # type: ignore[misc]
 
 
 class ConcreteWebDriverFactory(abstract_factory.AbstractWebDriverFactory):
-    """Concrete implementation of web driver factory"""
+    """Concrete implementation of a web driver factory.
+
+    This class implements the method to fetch or create web driver instances based on
+    the browser make and provided options.
+    """
 
     def __init__(self) -> None:
-        """Concrete implementation of webdriver instance"""
+        """Initialize the web driver factory."""
         pass
 
     def get_web_driver(
@@ -51,16 +67,23 @@ class ConcreteWebDriverFactory(abstract_factory.AbstractWebDriverFactory):
         *,
         browser_make: WebBrowserMake,
         options: Optional[dict[str, Any]] = None,
-    ):
-        """Concrete implementation of fetching web driver
+    ) -> WebDriver:
+        """Fetch or create a web driver instance.
 
         Args:
-            browser_make (WebBrowserMake): web browser make enum
-            options (Optional[dict[str, Any]], optional): web browser capabilities. Defaults to None.
+            browser_make (WebBrowserMake): The web browser make enum specifying which browser to use.
+            options (Optional[dict[str, Any]], optional): A dictionary of browser options or capabilities. Defaults to None.
+
+        Raises:
+            ValueError: If an invalid browser type is specified.
 
         Returns:
-            WebDriver: browser driver instance based on user choice of browser make
+            WebDriver: The browser driver instance based on the selected browser make.
         """
+        try:
+            WebBrowserMake(browser_make)
+        except ValueError:
+            raise ValueError(f"Invalid browser type specified: {browser_make}")
         return ConcreteWebDriver(browser_make=browser_make).get_web_driver(
             options=options
         )

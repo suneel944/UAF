@@ -40,6 +40,18 @@ There are two ways in which the framework can be utilised:
         - [Linux installation](https://docs.docker.com/desktop/install/linux-install/)
         - [Mac installation](https://docs.docker.com/desktop/install/mac-install/)
 
+    - Install `libq` dependency for `psycopg` which caters the postgres requirement usig below commands
+
+        ```bash
+        # ubuntu
+        sudo apt-get update
+        sudo apt-get install libpq-dev
+
+        # mac
+        brew install libpq
+        brew link --force libpq
+        ```
+    
     - Install [appium](https://appium.io/downloads.html)
 
     - Install [appium inspector](https://github.com/appium/appium-inspector/releases)
@@ -91,9 +103,9 @@ There are two ways in which the framework can be utilised:
         - Execute the below docker command:
             
             ```bash
-            sudo docker compose -f docker-compose up --build
+            sudo docker compose up --build
             # OR
-            sudo docker compose -f docker-compose up -d --build
+            sudo docker compose -d --build
             ```
 
         - To provide proper read write permissions for the `allure-reports` and `allure-results` folder execute the below command
@@ -151,9 +163,9 @@ There are two ways in which the framework can be utilised:
 
 - Invoke Celery to check if everything is working fine:
       
-      ```bash
-      celery -A uaf.device_farming.device_tasks worker -B -E -O fair --loglevel=INFO
-      ```
+    ```bash
+    celery -A uaf.device_farming.device_tasks worker -B -E -O fair --loglevel=INFO
+    ```
 
     - **Celery**: The command-line tool for managing Celery tasks.
         - **-A uaf.device_farming.device_tasks**: The app instance to use, where `uaf.device_farming.device_tasks` is the Python module containing the Celery application.
@@ -183,7 +195,7 @@ There are two ways in which the framework can be utilised:
         result_backend: rpc://<username>>:<password>@localhost:5672
 
     mongodb:
-        connection_string: mongodb://<username>>:<password>@localhost:27018/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
+        connection_string: mongodb://<username>>:<password>@localhost:27017/appium_device_stats?authSource=admin&authMechanism=SCRAM-SHA-256
         device_stat_collection: device_stats
         device_session_collection: device_sessions
 

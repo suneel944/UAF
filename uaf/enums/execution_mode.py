@@ -2,11 +2,11 @@ from . import Enum, unique
 
 
 @unique
-class TestExecutionMode(Enum):
+class ExecutionMode(Enum):
     """Test execution modes as constant
 
     Args:
-        Enum (TestExecutionMode): enum
+        Enum (ExecutionMode): enum
     """
 
     LOCAL = "local"

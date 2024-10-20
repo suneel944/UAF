@@ -41,3 +41,9 @@ worker_concurrency = 1
 # This setting can help prevent memory leaks and ensure that workers are periodically restarted
 # to free up system resources. In this case, we set the worker max tasks per child to 1000.
 worker_max_tasks_per_child = 1000
+# Control whether Celery retries connecting to the broker during the startup phase.
+# By default, this is set to False, meaning that Celery will not retry broker connections on startup,
+# and a failed connection will cause startup failure. When set to True, Celery will attempt to retry
+# the broker connection on startup if the first attempt fails. This is useful in environments where the broker
+# might not be immediately available, such as during transient network issues or delayed broker startups.
+broker_connection_retry_on_startup = True

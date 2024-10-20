@@ -2,11 +2,11 @@ from . import Enum, unique
 
 
 @unique
-class TestEnvironments(Enum):
+class Environments(Enum):
     """Test environments as constant
 
     Args:
-        Enum (TestEnvironments): enum
+        Enum (Environments): enum
     """
 
     DEVELOPMENT = "dev"

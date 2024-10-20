@@ -37,19 +37,17 @@ class SwipeUtils:
         view_port = self.driver.get_window_size()
         match direction.value:
             case Direction.UP.value:
-                # propagation towards increasing y axis
                 start_x = view_port["width"] // 2
                 start_y = int(view_port["height"] * 0.10)
                 end_x = view_port["width"] // 2
                 end_y = int(view_port["height"] * 0.8)
             case Direction.DOWN.value:
-                # propagation towards decreasing y axis
                 start_x = view_port["width"] // 2
                 start_y = int(view_port["height"] * 0.8)
                 end_x = view_port["width"] // 2
                 end_y = int(view_port["height"] * 0.10)
             case _:
-                ValueError("Invalid direction!")
+                raise ValueError("Invalid direction!")
         self.__build_w3c_actions(start_x, start_y, end_x, end_y)
         self.actions.perform()
 
@@ -58,64 +56,57 @@ class SwipeUtils:
         view_port = self.driver.get_window_size()
         match direction.value:
             case Direction.UP.value:
-                # propagation towards increasing y axis
                 start_x = view_port["width"] // 2
                 start_y = int(view_port["height"] * 0.10)
                 end_x = view_port["width"] // 2
                 end_y = int(view_port["height"] * 0.45)
             case Direction.DOWN.value:
-                # propagation towards decreasing y axis
                 start_x = view_port["width"] // 2
                 start_y = int(view_port["height"] * 0.45)
                 end_x = view_port["width"] // 2
                 end_y = int(view_port["height"] * 0.10)
             case _:
-                ValueError("Invalid direction!")
-        # build w3c compatible actions
+                raise ValueError("Invalid direction!")
         self.__build_w3c_actions(start_x, start_y, end_x, end_y)
         self.actions.perform()
 
     def swipe_till_text_visibility(self, text: str, direction: Direction, max_swipe=10):
+        if max_swipe <= 0:
+            raise ValueError("max_swipe must be greater than 0")
+
         start_x, start_y, end_x, end_y = 0, 0, 0, 0
         view_port = self.driver.get_window_size()
         match direction.value:
             case Direction.LEFT.value:
-                # propagation towards increasing x axis
                 start_x = view_port["width"] // 2
                 start_y = view_port["height"] // 2
                 end_x = int(view_port["width"] * 0.90)
                 end_y = view_port["height"] // 2
             case Direction.UP.value:
-                # propagation towards increasing y axis
                 start_x = view_port["width"] // 2
                 start_y = int(view_port["height"] * 0.15)
                 end_x = view_port["width"] // 2
                 end_y = int(view_port["height"] * 0.45)
             case Direction.RIGHT.value:
-                # propagation towards decreasing x axis
                 start_x = view_port["width"] // 2
                 start_y = view_port["height"] // 2
                 end_x = int(view_port["width"] * 0.10)
                 end_y = view_port["height"] // 2
             case Direction.DOWN.value:
-                # propagation towards decreasing y axis
                 start_x = view_port["width"] // 2
                 start_y = int(view_port["height"] * 0.45)
                 end_x = view_port["width"] // 2
                 end_y = int(view_port["height"] * 0.10)
             case _:
-                ValueError("Invalid direction!")
-        while max_swipe > 0:
-            # Check if the desired text is visible on the screen
-            if self.driver.page_source.find(text) != -1:
-                break
+                raise ValueError("Invalid direction!")
 
-            # build w3c compatible actions
+        while max_swipe > 0:
+            if text in self.driver.page_source:
+                return
             self.__build_w3c_actions(start_x, start_y, end_x, end_y)
             self.actions.perform()
-            max_swipe -= 1  # decrement
+            max_swipe -= 1
 
-            if max_swipe == 0 and self.driver.page_source.find(text) == -1:
-                raise NoSuchElementException(
-                    f"Text not found after swiping {max_swipe} times"
-                )
+        raise NoSuchElementException(
+            f"Text '{text}' not found after {max_swipe} swipes"
+        )

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -13,20 +11,23 @@ from . import webdriver
 
 
 class ConcreteChromiumDriver(AbstractChromium):
-    """Concrete implementation class of chromium web driver"""
+    """Concrete implementation class for creating a Chromium web driver."""
 
     def get_web_driver(self, *, options: ChromeOptions | None = None):
-        """Concrete implementation method of fetching chromium web driver
+        """Fetches and returns a Chromium browser web driver instance.
 
         Args:
-            capabilities (dict[str, Any]): chromium browser capabilities
+            options (ChromeOptions | None, optional): The Chrome options to configure the Chromium web driver.
+                                                      Defaults to None. If not provided, default options
+                                                      (maximized window) will be applied.
 
         Returns:
-            WebDriver: chromium webdriver instance
+            WebDriver: A Chromium WebDriver instance configured with the provided or default options.
         """
         if options is None:
             options = ChromeOptions()
             options.add_argument("start-maximized")
+
         return webdriver.Chrome(
             options=options,
             service=Service(
