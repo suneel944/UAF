@@ -71,7 +71,25 @@ For example, if you have commits with `feat:`, `fix:`, and `chore:` since the la
 
 1. Ensure your commits follow the standards outlined above.
 2. Update the README.md or relevant documentation with details of changes, if applicable.
-3. You may merge the Pull Request once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
+3. Use the pull request template provided when creating your pull request. This template is automatically loaded when you create a new pull request and includes checkboxes for ensuring your contribution meets our standards.
+4. Fill out the pull request template completely, checking off each item as you complete it.
+5. In the pull request description, provide a clear explanation of the changes and the rationale behind them.
+6. If your pull request addresses an existing issue, reference that issue in the pull request description using the syntax `Fixes #123` (where 123 is the issue number).
+7. You may merge the Pull Request once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
+
+## Pull Request Template
+
+When you create a new pull request, you'll see a template with various sections and checkboxes. This template is designed to ensure that your contribution meets our project standards and provides reviewers with all necessary information. Please fill out each section of the template thoroughly.
+
+Key points in the pull request template:
+
+- Describe the type of change (bug fix, new feature, breaking change, etc.)
+- Explain how you've tested your changes
+- Confirm that you've followed project guidelines (code style, documentation, etc.)
+- Verify that your commit messages follow the Conventional Commits specification
+- Provide any additional context or screenshots that might be helpful
+
+By using this template, you help maintainers and reviewers understand your contribution more quickly and ensure that all necessary information is provided upfront.
 
 ## Questions?
 

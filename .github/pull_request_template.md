@@ -1,48 +1,35 @@
-<!--- Provide a general summary of your changes in the Title above -->
-
 ## Description
-<!--- Describe your changes in detail -->
+<!-- Provide a brief description of the changes in this pull request -->
 
-<!--- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
-
-## Related Issue(s)
-<!--- This project only accepts pull requests related to open issues. Please link to the issue here: -->
-
-<!--- If suggesting a new feature or change, please discuss it in an issue first. -->
-<!--- If fixing a bug, there should be an issue describing it with steps to reproduce. -->
-
-## Motivation and Context
-<!--- Why is this change required? What problem does it solve? -->
-
-<!--- If it fixes an open issue, please link to the issue here. -->
-
-## How Has This Been Tested?
-<!--- Please describe in detail how you tested your changes. -->
-
-<!--- Include details of your testing environment, and the tests you ran to see how your change affects other areas of the code, etc. -->
-
-## Screenshots (if appropriate):
-<!--- Please add screenshots to help explain your changes. -->
-
-## Types of changes
-<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
-
+## Type of change
+<!-- Please delete options that are not relevant -->
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] Documentation update (if none of the other choices apply)
-- [ ] Other (please describe):
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] This change requires a documentation update
+
+## How Has This Been Tested?
+<!-- Please describe the tests that you ran to verify your changes -->
 
 ## Checklist:
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
+<!-- Please check off the following items by replacing [ ] with [x] -->
+- [ ] My code follows the style guidelines of this project
+- [ ] I have performed a self-review of my own code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
+- [ ] Any dependent changes have been merged and published in downstream modules
 
-- [ ] My code follows the code style of this project.
-- [ ] I have performed a self-review of my own code.
-- [ ] I have commented my code, particularly in hard-to-understand areas.
-- [ ] My changes generate no new warnings.
-- [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
-- [ ] Any dependent changes have been merged and published in downstream modules.
-- [ ] The documentation is up-to-date.
+## Conventional Commits
+<!-- Please ensure your commit messages follow the Conventional Commits specification -->
+- [ ] My commit messages follow the Conventional Commits specification
+- [ ] I understand how my commits will affect the version bump (if applicable)
 
-<!--- Thank you for contributing to this project! -->
+## Additional context
+<!-- Add any other context or screenshots about the pull request here -->
+
+## Related Issue
+<!-- If applicable, reference the issue number this pull request addresses -->
+Fixes #(issue)
