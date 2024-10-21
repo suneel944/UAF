@@ -32,7 +32,7 @@ jobs:
         id: check_last_commit
         run: |
           last_commit_message=$(git log -1 --pretty=%B)
-          if [[ $last_commit_message == "Bump version to"* ]]; then
+          if [[ $last_commit_message == "chore(release): bump version"* ]]; then
             echo "is_version_bump=true" >> $GITHUB_OUTPUT
           else
             echo "is_version_bump=false" >> $GITHUB_OUTPUT
@@ -48,17 +48,19 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
         run: |
           commits=$(git log --pretty=format:"%s" $(git describe --tags --abbrev=0)..HEAD)
-          if echo "$commits" | grep -qiE "BREAKING CHANGE|major"; then
+          if echo "$commits" | grep -qiE "BREAKING CHANGE"; then
             echo "type=major" >> $GITHUB_OUTPUT
-          elif echo "$commits" | grep -qiE "feat|feature|minor"; then
+          elif echo "$commits" | grep -qiE "^feat(\(.+\))?:"; then
             echo "type=minor" >> $GITHUB_OUTPUT
-          else
+          elif echo "$commits" | grep -qiE "^fix(\(.+\))?:"; then
             echo "type=patch" >> $GITHUB_OUTPUT
+          else
+            echo "type=none" >> $GITHUB_OUTPUT
           fi
 
       - name: Bump version
         id: bump_version
-        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false' && steps.bump_type.outputs.type != 'none'
         run: |
           current_version=${{ steps.get_version.outputs.version }}
           IFS='.' read -ra version_parts <<< "$current_version"
@@ -85,17 +87,31 @@ jobs:
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
           sed -i "s/__version__ = \".*\"/__version__ = \"$new_version\"/" uaf/version.py
 
+      - name: Generate changelog
+        id: changelog
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
+        run: |
+          changelog=$(git log --pretty=format:"- %s" $(git describe --tags --abbrev=0)..HEAD)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$changelog" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
-        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false' && steps.bump_type.outputs.type != 'none'
         with:
-          commit-message: "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+          commit-message: "chore(release): bump version to ${{ steps.bump_version.outputs.new_version }}"
           title: "Bump version to ${{ steps.bump_version.outputs.new_version }}"
           body: |
             This PR bumps the version to ${{ steps.bump_version.outputs.new_version }}.
             
             Changes:
-            - Updated version in uaf/version.py
+            ${{ steps.changelog.outputs.changelog }}
           branch: "version-bump-${{ steps.bump_version.outputs.new_version }}"
           delete-branch: true
           base: main
+
+      - name: No Version Bump Needed
+        if: steps.bump_type.outputs.type == 'none'
+        run: |
+          echo "No version bump needed. Only non-version-changing commits detected."
