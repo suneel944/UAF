@@ -7,8 +7,23 @@ on:
       - completed
 
 jobs:
-  build:
+  check_version_bump:
+    runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      version_bumped: ${{ steps.check_version_bump.outputs.version_bumped }}
+    steps:
+      - name: Check if version was bumped
+        id: check_version_bump
+        run: |
+          version_bumped=$(curl -sS -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}" \
+            | jq -r '.jobs[0].outputs.version_bumped')
+          echo "version_bumped=${version_bumped}" >> $GITHUB_OUTPUT
+
+  build:
+    needs: check_version_bump
+    if: ${{ needs.check_version_bump.outputs.version_bumped == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -61,7 +76,8 @@ jobs:
           path: dist/*.whl
 
   release:
-    needs: build
+    needs: [check_version_bump, build]
+    if: ${{ needs.check_version_bump.outputs.version_bumped == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -90,3 +106,13 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  debug:
+    needs: check_version_bump
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Debug Information
+        run: |
+          echo "Version bumped: ${{ needs.check_version_bump.outputs.version_bumped }}"
+          echo "Workflow run conclusion: ${{ github.event.workflow_run.conclusion }}"
