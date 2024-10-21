@@ -1,8 +1,6 @@
-name: Tests and notify
+name: Tests
 
 on: 
-  repository_dispatch:
-    types: [deployment-completed-event]
   push:
   pull_request:
   workflow_dispatch:
@@ -18,57 +16,55 @@ jobs:
         python-version: 
           ["3.11.4", "3.11.5", "3.11.6", "3.11.7", "3.11.8", "3.11.9"]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup python for test ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Setup python for test ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Update pip
-      run: pip install --upgrade pip
+      - name: Update pip
+        run: pip install --upgrade pip
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y make
-        pip install build pre-commit tox tox-gh-actions cryptography
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
+          pip install build pre-commit tox tox-gh-actions cryptography
 
-    - name: Upgrade pip
-      run: make upgrade-pip
+      - name: Upgrade pip
+        run: make upgrade-pip
 
-    - name: Set PYTHON_VERSION environment variable
-      run: |
-        PATCH_VERSION=$(echo "${{ matrix.python-version }}" | awk -F. '{print $3}')
-        echo "PYTHON_VERSION=311${PATCH_VERSION}" >> $GITHUB_ENV
+      - name: Set PYTHON_VERSION environment variable
+        run: |
+          PATCH_VERSION=$(echo "${{ matrix.python-version }}" | awk -F. '{print $3}')
+          echo "PYTHON_VERSION=311${PATCH_VERSION}" >> $GITHUB_ENV
 
-    - name: Decrypt configs
-      run: make decrypt security_key=${{ secrets.SECURITY_KEY }}
+      - name: Decrypt configs
+        run: make decrypt security_key=${{ secrets.SECURITY_KEY }}
     
-    - name: Build package
-      run: make tox PYTHON_VERSION=$PYTHON_VERSION
-      env:
-        PYTHON_VERSION: ${{ env.PYTHON_VERSION }}
+      - name: Build package
+        run: make tox PYTHON_VERSION=$PYTHON_VERSION
+        env:
+          PYTHON_VERSION: ${{ env.PYTHON_VERSION }}
+    
+      - name: Unit test
+        run: |
+          source .tox/py$PYTHON_VERSION/bin/activate
+          make test
+        env:
+          PYTHON_VERSION: ${{ env.PYTHON_VERSION }}
 
-    - name: Clean up
-      run: make clean
-  
-  notify-app-to-release-to-prod:
-    runs-on: ubuntu-latest
-    name: Notify app repo to release latest changes to prod
+      - name: Clean up
+        run: make clean
+
+  tests-passed:
     needs: build-uaf
-    if: github.event_name == 'repository_dispatch' && github.event.action == 'deployment-completed-event'
-    strategy:
-      matrix:
-        repos: [suneel944/simple_event_dispatch_micro]
+    runs-on: ubuntu-latest
     steps:
-      - name: Dispatch event on ${{ matrix.repos }}
-        uses: peter-evans/repository-dispatch@v3
-        with: 
-          token: ${{ secrets.REPO_ACCESS_TOKEN_TO_TRIGGER_PROD_RELEASE_EVENTS }}
-          repository: ${{ matrix.repos }}
-          event-type: release-app-to-prod
-          client-payload: '{ "github": ${{ toJson(github) }}, "TAG": "${{ github.event.repository.name }}" }'
+      - run: echo "All tests passed successfully"
+    outputs:
+      success: ${{ job.status == 'success' }}

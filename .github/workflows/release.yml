@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: ["Version Bump"]
+    types:
+      - completed
+
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11.4", "3.11.5", "3.11.6", "3.11.7", "3.11.8", "3.11.9"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get new version
+        id: get_version
+        run: echo "new_version=$(grep -oP '(?<=__version__ = ")[^"]*' uaf/version.py)" >> $GITHUB_OUTPUT
+
+      - name: Setup python for release ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Update pip
+        run: pip install --upgrade pip
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
+          pip install build pre-commit tox tox-gh-actions cryptography
+
+      - name: Upgrade pip
+        run: make upgrade-pip
+
+      - name: Set PYTHON_VERSION environment variable
+        run: |
+          PATCH_VERSION=$(echo "${{ matrix.python-version }}" | awk -F. '{print $3}')
+          echo "PYTHON_VERSION=311${PATCH_VERSION}" >> $GITHUB_ENV
+
+      - name: Decrypt configs
+        run: make decrypt security_key=${{ secrets.SECURITY_KEY }}
+    
+      - name: Build package
+        run: make tox PYTHON_VERSION=$PYTHON_VERSION
+        env:
+          PYTHON_VERSION: ${{ env.PYTHON_VERSION }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.python-version }}
+          path: dist/*.whl
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get new version
+        id: get_version
+        run: |
+          git pull
+          echo "new_version=$(grep -oP '(?<=__version__ = ")[^"]*' uaf/version.py)" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*.whl
+          tag_name: v${{ steps.get_version.outputs.new_version }}
+          name: Release ${{ steps.get_version.outputs.new_version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

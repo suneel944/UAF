@@ -1,5 +1,5 @@
 from pytest import mark, fixture
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, call
 from selenium.webdriver.common.by import By
 from uaf.utilities.ui.waiter.waits import Waits
 
@@ -85,7 +85,10 @@ def test_wait_for_until(waits):
 
 @mark.unit_test
 def test_wait_for_page_load(waits, mock_driver):
-    mock_driver.execute_script.return_value = "complete"
     waits.wait_for_page_load()
-    assert mock_driver.execute_script.call_count == 1
     assert waits.wait.until.call_count == 1
+    lambda_func = waits.wait.until.call_args[0][0]
+    lambda_func(mock_driver)
+    mock_driver.execute_script.assert_called_once_with(
+        'return document.readyState === "complete"'
+    )

@@ -1,0 +1,70 @@
+name: Version Bump
+
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types:
+      - completed
+
+jobs:
+  version-bump:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.bump_version.outputs.new_version }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Get latest version
+        id: get_version
+        run: echo "version=$(grep -oP '(?<=__version__ = ")[^"]*' uaf/version.py)" >> $GITHUB_OUTPUT
+
+      - name: Determine version bump type
+        id: bump_type
+        run: |
+          commits=$(git log --pretty=format:"%s" $(git describe --tags --abbrev=0)..HEAD)
+          if echo "$commits" | grep -qiE "BREAKING CHANGE|major"; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif echo "$commits" | grep -qiE "feat|feature|minor"; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          current_version=${{ steps.get_version.outputs.version }}
+          IFS='.' read -ra version_parts <<< "$current_version"
+          major=${version_parts[0]}
+          minor=${version_parts[1]}
+          patch=${version_parts[2]}
+          
+          case ${{ steps.bump_type.outputs.type }} in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+          esac
+          
+          new_version="$major.$minor.$patch"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          sed -i "s/__version__ = \".*\"/__version__ = \"$new_version\"/" uaf/version.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add uaf/version.py
+          git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+          git push
