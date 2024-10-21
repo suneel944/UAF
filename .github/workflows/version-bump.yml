@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.bump_version.outputs.new_version }}
+      version_bumped: ${{ steps.set_version_bumped.outputs.version_bumped }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -21,7 +22,7 @@ jobs:
         id: check_changes
         run: |
           git fetch origin main
-          changes=$(git diff --name-only origin/main...HEAD | grep -v "uaf/version.py" || true)
+          changes=$(git diff --name-only origin/main...HEAD | grep -v -E "uaf/version.py|^\.github/workflows/version-bump\.yml$" || true)
           if [ -n "$changes" ]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
           else
@@ -97,7 +98,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false' && steps.bump_type.outputs.type != 'none'
         with:
           commit-message: "chore(release): bump version to ${{ steps.bump_version.outputs.new_version }}"
@@ -115,3 +116,22 @@ jobs:
         if: steps.bump_type.outputs.type == 'none'
         run: |
           echo "No version bump needed. Only non-version-changing commits detected."
+
+      - name: Set version_bumped output
+        id: set_version_bumped
+        run: |
+          if [ "${{ steps.bump_type.outputs.type }}" != "none" ]; then
+            echo "version_bumped=true" >> $GITHUB_OUTPUT
+          else
+            echo "version_bumped=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Debug Information
+        if: always()
+        run: |
+          echo "Has changes: ${{ steps.check_changes.outputs.has_changes }}"
+          echo "Is version bump: ${{ steps.check_last_commit.outputs.is_version_bump }}"
+          echo "Bump type: ${{ steps.bump_type.outputs.type }}"
+          echo "Version bumped: ${{ steps.set_version_bumped.outputs.version_bumped }}"
+          echo "Changelog:"
+          echo "${{ steps.changelog.outputs.changelog }}"
