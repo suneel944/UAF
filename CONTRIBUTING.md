@@ -1,45 +1,98 @@
-# Contributing Guidelines
+# Contributing to This Project
 
-Welcome to the `uaf` project! We appreciate your interest in contributing to our project. Please take a moment to review these guidelines before submitting any contributions.
+Thank you for your interest in contributing to our project. To maintain consistency and ensure our automated version bumping works correctly, please follow these guidelines.
 
-## Code of Conduct
+## Commit Message Standards
 
-We expect all contributors to follow our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure that the project is a welcoming and inclusive environment for everyone.
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for our commit messages. This helps us automatically determine version bumps and generate changelogs.
 
-## Getting Started
+### Commit Message Format
 
-To get started with contributing, please follow these steps:
+Each commit message should be structured as follows:
 
-1. Fork the `uaf` repository and clone it to your local machine.
-2. Create a new branch for your changes: `git checkout -b my-new-branch`.
-3. Make your changes and commit them to your branch.
-4. Push your changes to your fork: `git push origin my-new-branch`.
-5. Open a pull request to the `main` branch of the `uaf` repository.
+```
+<type>[optional scope]: <description>
 
-## Contribution Guidelines
+[optional body]
 
-Before submitting your contributions, please make sure that your changes adhere to the following guidelines:
+[optional footer(s)]
+```
 
-### Code Style
+### Types
 
-We follow the [PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/) for all Python code. Please make sure that your code is formatted and styled according to this guide.
+- `feat`: A new feature (triggers a minor version bump)
+- `fix`: A bug fix (triggers a patch version bump)
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
 
-### Testing
+### Breaking Changes
 
-Please make sure that your changes are covered by tests, and that all tests pass before submitting your contribution.
+For commits that introduce breaking changes, add `BREAKING CHANGE:` in the commit body or footer. This will trigger a major version bump.
 
-### Documentation
+### Examples
 
-Please update the documentation as necessary to reflect your changes.
+```
+feat: add user authentication feature
 
-### Commit Messages
+BREAKING CHANGE: `auth` function now requires an API key
+```
 
-Please use clear and descriptive commit messages that explain the purpose of your changes.
+```
+fix: correct calculation in billing module
+```
 
-## Issues and Pull Requests
+```
+docs: update README with new build instructions
+```
 
-If you encounter any issues while contributing, please open an issue in the `uaf` repository. When opening a pull request, please include a brief description of your changes and reference any related issues.
+## How This Affects Version Bumping
 
-## License
+Our automated version bump process works as follows:
 
-By contributing to the `uaf` project, you agree to license your contributions under the [MIT License](LICENSE).
+1. If any commit since the last release contains `BREAKING CHANGE`, the major version is bumped.
+2. Otherwise, if any commit contains `feat:`, the minor version is bumped.
+3. If neither of the above conditions are met, but there are `fix:` commits, the patch version is bumped.
+4. If there are only `chore:`, `docs:`, `style:`, `refactor:`, `perf:`, or `test:` commits, no version bump occurs.
+
+### Multiple Commit Types in a Single Release
+
+When a release includes multiple commit types:
+
+- The highest-priority change determines the version bump (major > minor > patch).
+- Commits that don't trigger a version bump (like `chore:`) are included in the release but don't affect the version number.
+
+For example, if you have commits with `feat:`, `fix:`, and `chore:` since the last release, it will result in a minor version bump (due to `feat:`), and all changes (including those from `fix:` and `chore:`) will be included in the release notes.
+
+## Pull Request Process
+
+1. Ensure your commits follow the standards outlined above.
+2. Update the README.md or relevant documentation with details of changes, if applicable.
+3. Use the pull request template provided when creating your pull request. This template is automatically loaded when you create a new pull request and includes checkboxes for ensuring your contribution meets our standards.
+4. Fill out the pull request template completely, checking off each item as you complete it.
+5. In the pull request description, provide a clear explanation of the changes and the rationale behind them.
+6. If your pull request addresses an existing issue, reference that issue in the pull request description using the syntax `Fixes #123` (where 123 is the issue number).
+7. You may merge the Pull Request once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.
+
+## Pull Request Template
+
+When you create a new pull request, you'll see a template with various sections and checkboxes. This template is designed to ensure that your contribution meets our project standards and provides reviewers with all necessary information. Please fill out each section of the template thoroughly.
+
+Key points in the pull request template:
+
+- Describe the type of change (bug fix, new feature, breaking change, etc.)
+- Explain how you've tested your changes
+- Confirm that you've followed project guidelines (code style, documentation, etc.)
+- Verify that your commit messages follow the Conventional Commits specification
+- Provide any additional context or screenshots that might be helpful
+
+By using this template, you help maintainers and reviewers understand your contribution more quickly and ensure that all necessary information is provided upfront.
+
+## Questions?
+
+If you have any questions about the contribution process or these standards, please reach out to the project maintainers.
+
+Thank you for helping us maintain a consistent and efficient development process!
