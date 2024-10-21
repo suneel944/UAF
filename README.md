@@ -140,7 +140,7 @@ There are two ways in which the framework can be utilised:
 
     - Replace `<envname>` with the environment name, typically 'py'. If Tox is configured for different environments, it might be 'py31xx'.
 
-    - When using your preferred IDE, update the interpreter path. Here’s how to do it:
+    - When using your preferred IDE, update the interpreter path. Here's how to do it:
 
         ```bash
         which python3
@@ -230,6 +230,17 @@ There are two ways in which the framework can be utilised:
         ```bash
         python cli.py --mode decrypt --key <generated_secret_key> --data_file <relative_file_path>
         ```
+
+## Contributing
+
+We welcome contributions to this project! Before you start, please read our [CONTRIBUTING.md](CONTRIBUTING.md) file. It contains important information about our development process, coding standards, and how to submit pull requests.
+
+Key points:
+- We use [Conventional Commits](https://www.conventionalcommits.org/) for our commit messages.
+- Our version bumping is automated based on these commit messages.
+- Please ensure your code follows our style guide and passes all tests.
+
+Your contributions help make this project better for everyone. Thank you for your support!
 
 ## Running Tests
 - Now everything is setup and running fine, one final thing to test if things are really working. To run tests, run the following command
