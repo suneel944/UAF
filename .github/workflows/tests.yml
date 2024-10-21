@@ -1,8 +1,6 @@
-name: Tests and notify
+name: Tests
 
 on: 
-  repository_dispatch:
-    types: [deployment-completed-event]
   push:
   pull_request:
   workflow_dispatch:
@@ -52,23 +50,17 @@ jobs:
       run: make tox PYTHON_VERSION=$PYTHON_VERSION
       env:
         PYTHON_VERSION: ${{ env.PYTHON_VERSION }}
+    
+    - name: Unit test
+      run: make test
 
     - name: Clean up
       run: make clean
-  
-  notify-app-to-release-to-prod:
-    runs-on: ubuntu-latest
-    name: Notify app repo to release latest changes to prod
+
+  tests-passed:
     needs: build-uaf
-    if: github.event_name == 'repository_dispatch' && github.event.action == 'deployment-completed-event'
-    strategy:
-      matrix:
-        repos: [suneel944/simple_event_dispatch_micro]
+    runs-on: ubuntu-latest
     steps:
-      - name: Dispatch event on ${{ matrix.repos }}
-        uses: peter-evans/repository-dispatch@v3
-        with: 
-          token: ${{ secrets.REPO_ACCESS_TOKEN_TO_TRIGGER_PROD_RELEASE_EVENTS }}
-          repository: ${{ matrix.repos }}
-          event-type: release-app-to-prod
-          client-payload: '{ "github": ${{ toJson(github) }}, "TAG": "${{ github.event.repository.name }}" }'
+      - run: echo "All tests passed successfully"
+    outputs:
+      success: ${{ job.status == 'success' }}
