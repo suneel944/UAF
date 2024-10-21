@@ -17,12 +17,35 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git fetch origin main
+          changes=$(git diff --name-only origin/main...HEAD | grep -v "uaf/version.py" || true)
+          if [ -n "$changes" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if last commit is version bump
+        id: check_last_commit
+        run: |
+          last_commit_message=$(git log -1 --pretty=%B)
+          if [[ $last_commit_message == "Bump version to"* ]]; then
+            echo "is_version_bump=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_version_bump=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Get latest version
         id: get_version
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
         run: echo "version=$(grep -oP '(?<=__version__ = ")[^"]*' uaf/version.py)" >> $GITHUB_OUTPUT
 
       - name: Determine version bump type
         id: bump_type
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
         run: |
           commits=$(git log --pretty=format:"%s" $(git describe --tags --abbrev=0)..HEAD)
           if echo "$commits" | grep -qiE "BREAKING CHANGE|major"; then
@@ -35,6 +58,7 @@ jobs:
 
       - name: Bump version
         id: bump_version
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
         run: |
           current_version=${{ steps.get_version.outputs.version }}
           IFS='.' read -ra version_parts <<< "$current_version"
@@ -61,10 +85,17 @@ jobs:
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
           sed -i "s/__version__ = \".*\"/__version__ = \"$new_version\"/" uaf/version.py
 
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add uaf/version.py
-          git commit -m "Bump version to ${{ steps.bump_version.outputs.new_version }}"
-          git push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        if: steps.check_changes.outputs.has_changes == 'true' && steps.check_last_commit.outputs.is_version_bump == 'false'
+        with:
+          commit-message: "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+          title: "Bump version to ${{ steps.bump_version.outputs.new_version }}"
+          body: |
+            This PR bumps the version to ${{ steps.bump_version.outputs.new_version }}.
+            
+            Changes:
+            - Updated version in uaf/version.py
+          branch: "version-bump-${{ steps.bump_version.outputs.new_version }}"
+          delete-branch: true
+          base: main
